@@ -1,12 +1,11 @@
-﻿using System.Diagnostics;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
-namespace CalculatorLibrary
+namespace Calculator.Libraries
 {
-    public class Calculator
+    internal class CalculatorLibrary
     {
         JsonWriter writer;
-        public Calculator()
+        public CalculatorLibrary()
         {
             StreamWriter logFile = File.CreateText("calculatorlog.json");
             logFile.AutoFlush = true;
@@ -14,7 +13,7 @@ namespace CalculatorLibrary
             writer.Formatting = Formatting.Indented;
             writer.WriteStartObject();
             writer.WritePropertyName("Operations");
-            writer.WriteStartArray();     
+            writer.WriteStartArray();
         }
         public double DoOperation(double num1, double num2, string op)
         {
@@ -62,5 +61,5 @@ namespace CalculatorLibrary
             writer.WriteEndObject();
             writer.Close();
         }
-    } 
+    }
 }

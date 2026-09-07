@@ -1,12 +1,20 @@
-﻿using CalculatorLibrary;
+﻿// Project function library
+using Calculator.Libraries;
+
+// Project styles
+using Calculator.Styles;
+
+// Project helper
+using CalculatorHelper;
+
 using System.Text.RegularExpressions;
 
 bool endApp = false;
 
-Console.WriteLine("Console Calculator in C#\r");
-Console.WriteLine("------------------------\n");
+CalcHelper.Messages.WriteMessage("Console Calculator in C#", Colors.title);
+CalcHelper.Messages.WriteMessage("------------------------\n", Colors.title);
 
-Calculator calculator = new Calculator();
+CalculatorLibrary calculator = new CalculatorLibrary();
 while (!endApp)
 {
     string? numInput1 = "";
