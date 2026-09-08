@@ -7,6 +7,7 @@ namespace Calculator.Interface
     {
         internal static Style ErrorStyle { get; private set; } = new Style(foreground: Color.Red, decoration: Decoration.SlowBlink);
         internal static Style ErrorAnyKeyStyle { get; private set; } = new Style(foreground: Color.Red);
+        internal static Style TextStyle { get; private set; } = new Style(foreground: Color.Honeydew2);
     }
 
     // Class for the program interface

@@ -1,17 +1,17 @@
 ﻿// Program.cs
+
 // Project function library
 using Calculator.Libraries;
+// Project interface library
 using Calculator.Interface;
-
-// Project styles
-//using Calculator.Styles;
-
-// Project helper
 
 using System.Text.RegularExpressions;
 using Spectre.Console;
 
+// Set initial variables
 bool endApp = false;
+
+// Initialize the programs interface
 CalcInterface calcInterface = new CalcInterface();
 try
 {
@@ -24,7 +24,7 @@ catch (Exception ex)
     Messages.ErrorPressAnyKey();
 }
 
-
+// Initialize the programs library
 CalculatorLibrary calculator = new CalculatorLibrary();
 while (!endApp)
 {
