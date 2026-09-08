@@ -28,6 +28,12 @@ catch (Exception ex)
 CalculatorLibrary calculator = new CalculatorLibrary();
 while (!endApp)
 {
+    var menuChoice = AnsiConsole.Prompt(
+        new SelectionPrompt<Enums.MenuChoice>()
+        .Title("Select an operation:")
+        .AddChoices(Enum.GetValues<Enums.MenuChoice>())
+        );
+
     string? numInput1 = "";
     string? numInput2 = "";
     double result = 0;
@@ -87,5 +93,5 @@ while (!endApp)
     if (Console.ReadLine() == "n") endApp = true;
     Console.WriteLine("\n");
 }
-calculator.Finish();
+calculator.FinishJsonWriter();
 return;

@@ -55,7 +55,9 @@ namespace Calculator.Libraries
             return result;
         }
 
-        public void Finish()
+
+
+        public void FinishJsonWriter()
         {
             writer.WriteEndArray();
             writer.WriteEndObject();
