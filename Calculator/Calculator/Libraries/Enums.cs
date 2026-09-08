@@ -9,5 +9,10 @@
             Multiply,
             Divide
         }
+
+        internal enum Default
+        {
+            Default
+        }
     }
 }

@@ -28,11 +28,22 @@ catch (Exception ex)
 CalculatorLibrary calculator = new CalculatorLibrary();
 while (!endApp)
 {
-    var menuChoice = AnsiConsole.Prompt(
+    // Show menu options and assign choice.
+     Enums.MenuChoice menuChoice = AnsiConsole.Prompt(
         new SelectionPrompt<Enums.MenuChoice>()
         .Title("Select an operation:")
         .AddChoices(Enum.GetValues<Enums.MenuChoice>())
         );
+    try
+    {
+        calculator.SetMenuChoice(menuChoice);
+    }
+    catch (Exception ex)
+    {
+        endApp = true;
+        Messages.Print(ex.Message, Styles.ErrorStyle);
+        Messages.ErrorPressAnyKey();
+    }
 
     string? numInput1 = "";
     string? numInput2 = "";
@@ -58,16 +69,10 @@ while (!endApp)
         numInput1 = Console.ReadLine();
     }
 
-    Console.WriteLine("Choose an operator from the following list:");
-    Console.WriteLine("\ta - Add");
-    Console.WriteLine("\ts - Subtract");
-    Console.WriteLine("\tm - Multiply");
-    Console.WriteLine("\td - Divide");
-    Console.Write("Your option? ");
 
-    string? op = Console.ReadLine();
+    //string? op = Console.ReadLine();
 
-    if (op == null || ! Regex.IsMatch(op, "^(a|s|m|d)$"))
+    /*if (op == null || ! Regex.IsMatch(op, "^(a|s|m|d)$"))
     {
         Console.WriteLine("Error: Unrecognized input.");
     }
@@ -75,7 +80,7 @@ while (!endApp)
     {
         try
         {
-            result = calculator.DoOperation(cleanNum1, cleanNum2, op);
+            result = calculator.DoOperation(cleanNum1, cleanNum2, menuChoice);
             if (double.IsNaN(result))
             {
                 Console.WriteLine("This operation will result in a mathematical error.\n");
@@ -91,7 +96,7 @@ while (!endApp)
 
     Console.Write("Press 'n' and Enter to close the app, or press any other key and enter to continue: ");
     if (Console.ReadLine() == "n") endApp = true;
-    Console.WriteLine("\n");
+    Console.WriteLine("\n");*/
 }
 calculator.FinishJsonWriter();
 return;

@@ -1,10 +1,13 @@
 ﻿using Newtonsoft.Json;
+using Calculator.Libraries;
+using System.ComponentModel;
 
 namespace Calculator.Libraries
 {
     internal class CalculatorLibrary
     {
         JsonWriter writer;
+        private Enum _MenuChoice { get; set; } = Enums.Default.Default;
         public CalculatorLibrary()
         {
             StreamWriter logFile = File.CreateText("calculatorlog.json");
@@ -15,34 +18,47 @@ namespace Calculator.Libraries
             writer.WritePropertyName("Operations");
             writer.WriteStartArray();
         }
-        public double DoOperation(double num1, double num2, string op)
+
+        internal void SetMenuChoice(Enum menuChoice)
+        {
+            // If the menuChoice is not in the defined enum value
+            if (!Enum.IsDefined(typeof(Enums.MenuChoice), menuChoice))
+            {
+                throw new InvalidEnumArgumentException("InvalidEnumArgumentException: MenuChoice somehow falls outside of the defined Enum.\n");
+            }
+            else
+            {
+                this._MenuChoice = menuChoice;
+            }
+        }
+        internal double DoOperation(double firstNumber, double secondNumber, Enum menuChoice)
         {
             double result = double.NaN;
             writer.WriteStartObject();
             writer.WritePropertyName("Operand1");
-            writer.WriteValue(num1);
+            writer.WriteValue(firstNumber);
             writer.WritePropertyName("Operand2");
-            writer.WriteValue(num2);
+            writer.WriteValue(secondNumber);
             writer.WritePropertyName("Operation");
 
-            switch (op)
+            switch (menuChoice)
             {
-                case "a":
-                    result = num1 + num2;
+                case Enums.MenuChoice.Add:
+                    result = firstNumber + secondNumber;
                     writer.WriteValue("Add");
                     break;
-                case "s":
-                    result = num1 - num2;
+                case Enums.MenuChoice.Subtract:
+                    result = firstNumber - secondNumber;
                     writer.WriteValue("Subtract");
                     break;
-                case "m":
-                    result = num1 * num2;
+                case Enums.MenuChoice.Multiply:
+                    result = firstNumber * secondNumber;
                     writer.WriteValue("Multiply");
                     break;
-                case "d":
-                    if (num2 != 0)
+                case Enums.MenuChoice.Divide:
+                    if (secondNumber != 0)
                     {
-                        result = num1 / num2;
+                        result = firstNumber / secondNumber;
                         writer.WriteValue("Divide");
                     }
                     break;
