@@ -1,18 +1,28 @@
-﻿// Project function library
+﻿// Program.cs
+// Project function library
 using Calculator.Libraries;
+using Calculator.Interface;
 
 // Project styles
-using Calculator.Styles;
+//using Calculator.Styles;
 
 // Project helper
-using CalculatorHelper;
 
 using System.Text.RegularExpressions;
+using Spectre.Console;
 
 bool endApp = false;
+CalcInterface calcInterface = new CalcInterface();
+try
+{
+    calcInterface.WriteLayout();
+}
+catch (Exception ex)
+{
+    endApp = true;
+    Messages.Print(ex.Message, Styles.ErrorStyle);
+}
 
-CalcHelper.Messages.WriteMessage("Console Calculator in C#", Colors.title);
-CalcHelper.Messages.WriteMessage("------------------------\n", Colors.title);
 
 CalculatorLibrary calculator = new CalculatorLibrary();
 while (!endApp)

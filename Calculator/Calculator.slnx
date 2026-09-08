@@ -1,5 +1,4 @@
 <Solution>
   <Project Path="Calculator/Calculator.csproj" />
-  <Project Path="CalculatorHelper/CalculatorHelper.csproj" Id="479a6700-cbf3-4409-9284-32956b194507" />
   <Project Path="MockDatabase/MockDatabase.csproj" Id="81b60c76-7192-47a0-9bce-04504196b16e" />
 </Solution>
