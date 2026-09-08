@@ -21,6 +21,7 @@ catch (Exception ex)
 {
     endApp = true;
     Messages.Print(ex.Message, Styles.ErrorStyle);
+    Messages.ErrorPressAnyKey();
 }
 
 
