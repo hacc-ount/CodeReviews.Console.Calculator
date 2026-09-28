@@ -13,6 +13,7 @@ namespace Calculator.Libraries
         private int _UseCounter { get; set; } = 0;
         private double _UserAnswerOne { get; set; } = 0;
         private double _UserAnswerTwo { get; set; } = 0;
+        private double _Result { get; set; } = 0;
         public CalculatorLibrary()
         {
             StreamWriter logFile = File.CreateText("calculatorlog.json");
@@ -46,44 +47,63 @@ namespace Calculator.Libraries
             _UserAnswerTwo = secondAnswer;
         }
 
-        internal double DoOperation(double firstNumber, double secondNumber, Enum menuChoice)
+        // Function only used during division operation when trying to divide by zero
+        private void GetValidDivisionNumber()
+        {
+            double userAnswer = 0;
+
+            while (userAnswer == 0)
+            {
+                userAnswer = AnsiConsole.Ask<double>($"[{Styles.TextColorStyle}]Enter a number that's not zero:[/]");
+            }
+
+            _UserAnswerTwo = userAnswer;
+
+        }
+
+        internal void DoOperation()
         {
             double result = double.NaN;
             writer.WriteStartObject();
             writer.WritePropertyName("Operand1");
-            writer.WriteValue(firstNumber);
+            writer.WriteValue(_UserAnswerOne);
             writer.WritePropertyName("Operand2");
-            writer.WriteValue(secondNumber);
+            writer.WriteValue(_UserAnswerTwo);
             writer.WritePropertyName("Operation");
 
-            switch (menuChoice)
+            switch (_MenuChoice)
             {
                 case Enums.MenuChoice.Add:
-                    result = firstNumber + secondNumber;
+                    result = _UserAnswerOne + _UserAnswerTwo;
                     writer.WriteValue("Add");
                     break;
                 case Enums.MenuChoice.Subtract:
-                    result = firstNumber - secondNumber;
+                    result = _UserAnswerOne - _UserAnswerTwo;
                     writer.WriteValue("Subtract");
                     break;
                 case Enums.MenuChoice.Multiply:
-                    result = firstNumber * secondNumber;
+                    result = _UserAnswerOne * _UserAnswerTwo;
                     writer.WriteValue("Multiply");
                     break;
                 case Enums.MenuChoice.Divide:
-                    if (secondNumber != 0)
+                    if (_UserAnswerTwo != 0)
                     {
-                        result = firstNumber / secondNumber;
-                        writer.WriteValue("Divide");
+                        result = _UserAnswerOne / _UserAnswerTwo;
                     }
+                    else
+                    {
+                        GetValidDivisionNumber();
+                        result = _UserAnswerOne / _UserAnswerTwo;
+                    }
+                    writer.WriteValue("Divide");
                     break;
                 default:
                     break;
             }
             writer.WritePropertyName("Result");
-            writer.WriteValue(result);
+            writer.WriteValue(_Result);
             writer.WriteEndObject();
-            return result;
+            _Result = result;
             // Update use counter here? maybe not...
         }
 
