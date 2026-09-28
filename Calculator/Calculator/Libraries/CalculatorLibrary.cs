@@ -8,6 +8,7 @@ namespace Calculator.Libraries
     {
         JsonWriter writer;
         private Enum _MenuChoice { get; set; } = Enums.Default.Default;
+        private int _UseCounter { get; set; } = 0;
         public CalculatorLibrary()
         {
             StreamWriter logFile = File.CreateText("calculatorlog.json");
@@ -69,9 +70,13 @@ namespace Calculator.Libraries
             writer.WriteValue(result);
             writer.WriteEndObject();
             return result;
+            // Update use counter here? maybe not...
         }
 
-
+        internal void UpdateUseCounter()
+        {
+            this._UseCounter += 1;
+        }
 
         public void FinishJsonWriter()
         {
