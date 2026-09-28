@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using Calculator.Libraries;
 using System.ComponentModel;
+using Spectre.Console;
+using Calculator.Interface;
 
 namespace Calculator.Libraries
 {
@@ -9,6 +11,8 @@ namespace Calculator.Libraries
         JsonWriter writer;
         private Enum _MenuChoice { get; set; } = Enums.Default.Default;
         private int _UseCounter { get; set; } = 0;
+        private double _UserAnswerOne { get; set; } = 0;
+        private double _UserAnswerTwo { get; set; } = 0;
         public CalculatorLibrary()
         {
             StreamWriter logFile = File.CreateText("calculatorlog.json");
@@ -32,6 +36,16 @@ namespace Calculator.Libraries
                 this._MenuChoice = menuChoice;
             }
         }
+
+        internal void GetInputs()
+        {
+            double userAnswer = AnsiConsole.Ask<double>($"[{Styles.TextColorStyle}]Enter first number:[/]");
+            _UserAnswerOne = userAnswer;
+
+            double secondAnswer = AnsiConsole.Ask<double>($"[{Styles.TextColorStyle}]Enter second number:[/]");
+            _UserAnswerTwo = secondAnswer;
+        }
+
         internal double DoOperation(double firstNumber, double secondNumber, Enum menuChoice)
         {
             double result = double.NaN;

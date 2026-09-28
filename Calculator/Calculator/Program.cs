@@ -45,29 +45,7 @@ while (!endApp)
         Messages.ErrorPressAnyKey();
     }
 
-    string? numInput1 = "";
-    string? numInput2 = "";
-    double result = 0;
-
-    Console.Write("Type a number, and then press Enter: ");
-    numInput1 = Console.ReadLine();
-
-    double cleanNum1 = 0;
-    while(!double.TryParse(numInput1, out cleanNum1))
-    {
-        Console.Write("This is not a valid input. Please enter a numeric value: ");
-        numInput1 = Console.ReadLine();
-    }
-
-    Console.Write("Type a number, and then press Enter: ");
-    numInput2 = Console.ReadLine();
-
-    double cleanNum2 = 0;
-    while (!double.TryParse(numInput2, out cleanNum2))
-    {
-        Console.Write("This is not a valid input. Please enter a numeric value: ");
-        numInput1 = Console.ReadLine();
-    }
+    calculator.GetInputs();
 
 
     //string? op = Console.ReadLine();
