@@ -24,6 +24,7 @@ namespace Calculator.Interface
         private Panel defaultCalcListPanel = new Panel("Defaultccc") { Width = 30 }.Header("Calculations");
 
         private Panel _DisplayPanel { get; set; } = new Panel("----------") { Width = 30 }.Header("Display");
+        private Panel _CalculationsPanel { get; set; } = new Panel("----------") { Width = 30 }.Header("Past Calculations");
 
         // Class constructor
         internal CalcInterface()
@@ -45,7 +46,17 @@ namespace Calculator.Interface
         internal void UpdateDisplayPanel(string calculation)
         {
             // Update with latest calculation (String)
-            _DisplayPanel = new Panel(calculation) { Width = 30 }.Header("Calculations");
+            _DisplayPanel = new Panel(calculation) { Width = 30 }.Header("Display");
+        }
+
+        internal void UpdateCalculationsPanel(List<string> calculationList)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (string calculation in calculationList)
+            {
+                sb.Append($"> {calculation}\n");
+            }
+            _CalculationsPanel = new Panel(sb.ToString()) { Width = 30 }.Header("Calculations");
         }
 
         // Function updates root grid with new panels (fake live updates)
@@ -53,6 +64,7 @@ namespace Calculator.Interface
         {
             // Create a new grid with a column
             MainGrid = SetGridTemplate();
+            MainGrid.AddRow(_CalculationsPanel);
             MainGrid.AddRow(_DisplayPanel);
         }
 

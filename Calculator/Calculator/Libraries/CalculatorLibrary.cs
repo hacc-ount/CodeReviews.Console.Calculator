@@ -22,6 +22,8 @@ namespace Calculator.Libraries
         private string _CurrentMethodSymbol { get; set; } = "@";
         internal string _CurrentCalculation { get; private set; } = "";
 
+        internal List<string> Calculations { get; private set; } = new List<string>();
+
         public CalculatorLibrary()
         {
             StreamWriter logFile = File.CreateText("calculatorlog.json");
@@ -161,6 +163,11 @@ namespace Calculator.Libraries
                 sb.Append($" = {_Result.ToString()}");
                 _CurrentCalculation = sb.ToString();
             } 
+        }
+
+        internal void UpdateCalculationsList()
+        {
+            Calculations.Add(_CurrentCalculation);
         }
 
         internal void ResetInputValidation()

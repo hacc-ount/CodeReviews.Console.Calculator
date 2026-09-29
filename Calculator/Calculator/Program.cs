@@ -70,9 +70,16 @@ while (!endApp)
     calculator.GetInput();
     calculator.DoOperation();
     calculator.UpdateCurrentCalculation();
+
+    // Update calculations list
+    calculator.UpdateCalculationsList();
+
     calcInterface.UpdateDisplayPanel(calculator._CurrentCalculation);
+    calcInterface.UpdateCalculationsPanel(calculator.Calculations);
     calcInterface.UpdateMainGrid();
     calcInterface.DisplayGrid();
+
+    
 
     // Reset some validation properties
     calculator.ResetInputValidation();
