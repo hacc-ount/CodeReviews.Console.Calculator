@@ -1,19 +1,26 @@
-﻿using Newtonsoft.Json;
+﻿using Calculator.Interface;
 using Calculator.Libraries;
-using System.ComponentModel;
+using Newtonsoft.Json;
 using Spectre.Console;
-using Calculator.Interface;
+using System.ComponentModel;
+using System.Text;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Calculator.Libraries
 {
     internal class CalculatorLibrary
     {
         JsonWriter writer;
-        private Enum _MenuChoice { get; set; } = Enums.Default.Default;
+        internal Enum _MenuChoice { get; private set; } = Enums.Default.Default;
         private int _UseCounter { get; set; } = 0;
-        private double _UserAnswerOne { get; set; } = 0;
-        private double _UserAnswerTwo { get; set; } = 0;
-        private double _Result { get; set; } = 0;
+        internal double _UserFirstInput { get; private set; } = 0;
+        internal double _UserSecondInput { get; private set; } = 0;
+
+        private bool _FirstInputInputted { get; set; } = false;
+        internal double _Result { get; private set; } = 0;
+        private string _CurrentMethodSymbol { get; set; } = "@";
+        internal string _CurrentCalculation { get; private set; } = "";
+
         public CalculatorLibrary()
         {
             StreamWriter logFile = File.CreateText("calculatorlog.json");
@@ -38,13 +45,42 @@ namespace Calculator.Libraries
             }
         }
 
-        internal void GetInputs()
+        internal void UpdateMethodSymbol()
         {
-            double userAnswer = AnsiConsole.Ask<double>($"[{Styles.TextColorStyle}]Enter first number:[/]");
-            _UserAnswerOne = userAnswer;
+            switch (_MenuChoice)
+            {
+                case Enums.MenuChoice.Add:
+                    _CurrentMethodSymbol = "+";
+                    break;
+                case Enums.MenuChoice.Subtract:
+                    _CurrentMethodSymbol = "-";
+                    break;
+                case Enums.MenuChoice.Multiply:
+                    _CurrentMethodSymbol = "*";
+                    break;
+                case Enums.MenuChoice.Divide:
+                    _CurrentMethodSymbol = "/";
+                    break;
+                case Enums.Default.Default:
+                    _CurrentMethodSymbol = "@";
+                    throw new InvalidOperationException("InvalidOperationException: Not a valid menuChoice symbol");
+            }
+        }
 
-            double secondAnswer = AnsiConsole.Ask<double>($"[{Styles.TextColorStyle}]Enter second number:[/]");
-            _UserAnswerTwo = secondAnswer;
+        // Function fo singular input.
+        internal void GetInput()
+        {
+            if (_FirstInputInputted == false)
+            {
+                double userAnswer = AnsiConsole.Ask<double>($"[{Styles.TextColorStyle}]Enter first number:[/]");
+                _UserFirstInput = userAnswer;
+                _FirstInputInputted = true;
+            }
+            else
+            {
+                double secondAnswer = AnsiConsole.Ask<double>($"[{Styles.TextColorStyle}]Enter second number:[/]");
+                _UserSecondInput = secondAnswer;
+            }   
         }
 
         // Function only used during division operation when trying to divide by zero
@@ -54,10 +90,11 @@ namespace Calculator.Libraries
 
             while (userAnswer == 0)
             {
+                Messages.Print("Cannot divide by zero, please enter another number", Styles.ErrorStyle);
                 userAnswer = AnsiConsole.Ask<double>($"[{Styles.TextColorStyle}]Enter a number that's not zero:[/]");
             }
 
-            _UserAnswerTwo = userAnswer;
+            _UserSecondInput = userAnswer;
 
         }
 
@@ -66,34 +103,34 @@ namespace Calculator.Libraries
             double result = double.NaN;
             writer.WriteStartObject();
             writer.WritePropertyName("Operand1");
-            writer.WriteValue(_UserAnswerOne);
+            writer.WriteValue(_UserFirstInput);
             writer.WritePropertyName("Operand2");
-            writer.WriteValue(_UserAnswerTwo);
+            writer.WriteValue(_UserSecondInput);
             writer.WritePropertyName("Operation");
 
             switch (_MenuChoice)
             {
                 case Enums.MenuChoice.Add:
-                    result = _UserAnswerOne + _UserAnswerTwo;
+                    result = _UserFirstInput + _UserSecondInput;
                     writer.WriteValue("Add");
                     break;
                 case Enums.MenuChoice.Subtract:
-                    result = _UserAnswerOne - _UserAnswerTwo;
+                    result = _UserFirstInput - _UserSecondInput;
                     writer.WriteValue("Subtract");
                     break;
                 case Enums.MenuChoice.Multiply:
-                    result = _UserAnswerOne * _UserAnswerTwo;
+                    result = _UserFirstInput * _UserSecondInput;
                     writer.WriteValue("Multiply");
                     break;
                 case Enums.MenuChoice.Divide:
-                    if (_UserAnswerTwo != 0)
+                    if (_UserSecondInput != 0)
                     {
-                        result = _UserAnswerOne / _UserAnswerTwo;
+                        result = _UserFirstInput / _UserSecondInput;
                     }
                     else
                     {
                         GetValidDivisionNumber();
-                        result = _UserAnswerOne / _UserAnswerTwo;
+                        result = _UserFirstInput / _UserSecondInput;
                     }
                     writer.WriteValue("Divide");
                     break;
@@ -104,7 +141,19 @@ namespace Calculator.Libraries
             writer.WriteValue(_Result);
             writer.WriteEndObject();
             _Result = result;
+            _FirstInputInputted = false; // Reset to default state of false
             // Update use counter here? maybe not...
+        }
+
+        internal void UpdateCurrentCalculation()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(_UserFirstInput.ToString());
+            sb.Append($" {_CurrentMethodSymbol} ");
+            sb.Append(_UserSecondInput.ToString());
+            sb.Append($" {_Result.ToString()}");
+
+            _CurrentCalculation = sb.ToString();
         }
 
         internal void UpdateUseCounter()

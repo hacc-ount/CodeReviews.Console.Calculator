@@ -1,4 +1,6 @@
-﻿using Spectre.Console;
+﻿using Calculator.Libraries;
+using Spectre.Console;
+using System.Text;
 
 namespace Calculator.Interface
 {
@@ -15,56 +17,59 @@ namespace Calculator.Interface
     internal class CalcInterface
     {
         // Class properties
-        internal Layout RootLayout { get; private set; } = new Layout("Default Name");
-        private Panel defaultDisplayPanel = new Panel("Default") { Width = 30 }.Header("Display");
-        private Panel defaultCalcListPanel = new Panel("Default") { Width = 30 }.Header("Calculations");
+        //Grids
+        private Grid GridTemplate { get; set; } = new Grid();
+        internal Grid MainGrid { get; private set; } = new Grid();
+        //Panels
+        private Panel defaultDisplayPanel = new Panel("Defaultghghghg") { Width = 30 }.Header("Display");
+        private Panel defaultCalcListPanel = new Panel("Defaultccc") { Width = 30 }.Header("Calculations");
+
+        private Panel _DisplayPanel { get; set; } = new Panel("----------") { Width = 30 }.Header("Display");
 
         // Class constructor
         internal CalcInterface()
         {
-            this.RootLayout = SetInitialRootLayout(defaultDisplayPanel, defaultCalcListPanel);
-            AnsiConsole.Write(RootLayout);
+            this.GridTemplate = SetGridTemplate();
+            this.MainGrid = this.GridTemplate;
         }
 
         // Function sets initial layout to update the default fallback.
-        private Layout SetInitialRootLayout(Panel displayPanel, Panel calcListPanel)
+        private Grid SetGridTemplate()
         {
-            Layout rootLayout = new Layout("root")
-                .SplitColumns(
-                new Layout("body").Size(40));
+            Grid grid = new Grid();
 
-            rootLayout["body"].SplitRows(
-                new Layout("display").Ratio(1),
-                new Layout("calcList").Ratio(2));
+            grid.AddColumn();
 
-            rootLayout["body"]["display"].Update(displayPanel);
-            rootLayout["body"]["calcList"].Update(calcListPanel);
-
-            return rootLayout;
+            return grid;
         }
 
-        // Function updates root layout with new panels (fake live updates)
-        internal void UpdateRootLayout()
+        // Function to create and update display panel
+        internal void UpdateDisplayPanel(string calculation)
         {
+            // Update with latest calculation (String)
+            _DisplayPanel = new Panel(calculation) { Width = 30 }.Header("Calculations");
+        }
 
+        // Function updates root grid with new panels (fake live updates)
+        internal void UpdateMainGrid()
+        {
+            MainGrid.AddRow(_DisplayPanel);
         }
 
         // Function writes the root layout variable
-        internal void WriteLayout()
+        internal void DisplayGrid()
         {
             // If the object is not initialized then the default layout is applied, throw an exception.
-            if (RootLayout.Name == "Default Name")
+            if (MainGrid == null)
             {
                 throw new InvalidOperationException("InvalidOperationException: Interface object was never initialized.\n");
             }
             else
             {
                 Console.Clear();
-                AnsiConsole.Write(RootLayout);
+                AnsiConsole.Write(MainGrid);
             }
         }
-
-
     }
 
     // Class relating to program messages

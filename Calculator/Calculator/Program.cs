@@ -15,7 +15,7 @@ bool endApp = false;
 CalcInterface calcInterface = new CalcInterface();
 try
 {
-    calcInterface.WriteLayout();
+    calcInterface.DisplayGrid();
 }
 catch (Exception ex)
 {
@@ -34,6 +34,8 @@ while (!endApp)
         .Title("Select an operation:")
         .AddChoices(Enum.GetValues<Enums.MenuChoice>())
         );
+
+    // Try to set the menu choice
     try
     {
         calculator.SetMenuChoice(menuChoice);
@@ -44,9 +46,24 @@ while (!endApp)
         Messages.Print(ex.Message, Styles.ErrorStyle);
         Messages.ErrorPressAnyKey();
     }
+    
+    // Try update calculation symbol
+    try
+    {
+        calculator.UpdateMethodSymbol();
+    }
+    catch (Exception ex)
+    {
+        endApp = true;
+        Messages.Print(ex.Message, Styles.ErrorStyle);
+        Messages.ErrorPressAnyKey();
+    }
 
-    calculator.GetInputs();
-
+    calculator.GetInput();
+    calculator.UpdateCurrentCalculation();
+    calcInterface.UpdateDisplayPanel(calculator._CurrentCalculation);
+    calcInterface.UpdateMainGrid();
+    calcInterface.DisplayGrid();
 
     //string? op = Console.ReadLine();
 
