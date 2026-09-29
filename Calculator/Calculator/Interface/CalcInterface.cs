@@ -18,7 +18,6 @@ namespace Calculator.Interface
     {
         // Class properties
         //Grids
-        private Grid GridTemplate { get; set; } = new Grid();
         internal Grid MainGrid { get; private set; } = new Grid();
         //Panels
         private Panel defaultDisplayPanel = new Panel("Defaultghghghg") { Width = 30 }.Header("Display");
@@ -28,9 +27,8 @@ namespace Calculator.Interface
 
         // Class constructor
         internal CalcInterface()
-        {
-            this.GridTemplate = SetGridTemplate();
-            this.MainGrid = this.GridTemplate;
+        {  
+            this.MainGrid = SetGridTemplate();
         }
 
         // Function sets initial layout to update the default fallback.
@@ -53,6 +51,8 @@ namespace Calculator.Interface
         // Function updates root grid with new panels (fake live updates)
         internal void UpdateMainGrid()
         {
+            // Create a new grid with a column
+            MainGrid = SetGridTemplate();
             MainGrid.AddRow(_DisplayPanel);
         }
 
@@ -66,7 +66,7 @@ namespace Calculator.Interface
             }
             else
             {
-                Console.Clear();
+                AnsiConsole.Clear();
                 AnsiConsole.Write(MainGrid);
             }
         }

@@ -17,6 +17,7 @@ namespace Calculator.Libraries
         internal double _UserSecondInput { get; private set; } = 0;
 
         private bool _FirstInputInputted { get; set; } = false;
+        private bool _SecondInputInputted { get; set; } = false;
         internal double _Result { get; private set; } = 0;
         private string _CurrentMethodSymbol { get; set; } = "@";
         internal string _CurrentCalculation { get; private set; } = "";
@@ -80,6 +81,7 @@ namespace Calculator.Libraries
             {
                 double secondAnswer = AnsiConsole.Ask<double>($"[{Styles.TextColorStyle}]Enter second number:[/]");
                 _UserSecondInput = secondAnswer;
+                _SecondInputInputted = true;
             }   
         }
 
@@ -90,8 +92,8 @@ namespace Calculator.Libraries
 
             while (userAnswer == 0)
             {
-                Messages.Print("Cannot divide by zero, please enter another number", Styles.ErrorStyle);
-                userAnswer = AnsiConsole.Ask<double>($"[{Styles.TextColorStyle}]Enter a number that's not zero:[/]");
+                Messages.Print("Cannot divide by zero, please enter another number\n", Styles.ErrorStyle);
+                userAnswer = AnsiConsole.Ask<double>($"[{Styles.TextColorStyle}]Enter a number that's not zero:[/] ");
             }
 
             _UserSecondInput = userAnswer;
@@ -141,7 +143,6 @@ namespace Calculator.Libraries
             writer.WriteValue(_Result);
             writer.WriteEndObject();
             _Result = result;
-            _FirstInputInputted = false; // Reset to default state of false
             // Update use counter here? maybe not...
         }
 
@@ -150,10 +151,22 @@ namespace Calculator.Libraries
             StringBuilder sb = new StringBuilder();
             sb.Append(_UserFirstInput.ToString());
             sb.Append($" {_CurrentMethodSymbol} ");
-            sb.Append(_UserSecondInput.ToString());
-            sb.Append($" {_Result.ToString()}");
+            if (_SecondInputInputted == false)
+            {
+                _CurrentCalculation = sb.ToString();
+            }
+            else
+            {
+                sb.Append(_UserSecondInput.ToString());
+                sb.Append($" = {_Result.ToString()}");
+                _CurrentCalculation = sb.ToString();
+            } 
+        }
 
-            _CurrentCalculation = sb.ToString();
+        internal void ResetInputValidation()
+        {
+            _FirstInputInputted = false;
+            _SecondInputInputted = false;
         }
 
         internal void UpdateUseCounter()

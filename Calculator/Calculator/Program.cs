@@ -59,39 +59,24 @@ while (!endApp)
         Messages.ErrorPressAnyKey();
     }
 
+    // First number input
     calculator.GetInput();
     calculator.UpdateCurrentCalculation();
     calcInterface.UpdateDisplayPanel(calculator._CurrentCalculation);
     calcInterface.UpdateMainGrid();
     calcInterface.DisplayGrid();
 
-    //string? op = Console.ReadLine();
+    // Second number input
+    calculator.GetInput();
+    calculator.DoOperation();
+    calculator.UpdateCurrentCalculation();
+    calcInterface.UpdateDisplayPanel(calculator._CurrentCalculation);
+    calcInterface.UpdateMainGrid();
+    calcInterface.DisplayGrid();
 
-    /*if (op == null || ! Regex.IsMatch(op, "^(a|s|m|d)$"))
-    {
-        Console.WriteLine("Error: Unrecognized input.");
-    }
-    else
-    {
-        try
-        {
-            result = calculator.DoOperation(cleanNum1, cleanNum2, menuChoice);
-            if (double.IsNaN(result))
-            {
-                Console.WriteLine("This operation will result in a mathematical error.\n");
-            }
-            else Console.WriteLine("Your result: {0:0.##}\n", result);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine("An exception occured when trying to do an operation. Details: " + e.Message);
-        }
-    }
-    Console.WriteLine("-----------------------\n");
+    // Reset some validation properties
+    calculator.ResetInputValidation();
 
-    Console.Write("Press 'n' and Enter to close the app, or press any other key and enter to continue: ");
-    if (Console.ReadLine() == "n") endApp = true;
-    Console.WriteLine("\n");*/
 }
 calculator.FinishJsonWriter();
 return;
