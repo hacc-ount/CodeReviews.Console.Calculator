@@ -18,7 +18,7 @@ namespace Calculator.Libraries
 
         internal double _Result { get; private set; } = 0;
         private string _CurrentOperationSymbol { get; set; } = "@";
-        internal string _CurrentCalculation { get; private set; } = "";
+        internal List<string> _CurrentCalculation { get; private set; } = new List<string>();
 
         internal List<string> Calculations { get; private set; } = new List<string>();
 
@@ -80,11 +80,13 @@ namespace Calculator.Libraries
             {
                 // If no first number has been input, assign it
                 _FirstNumber = userAnswer;
+                _CurrentCalculation.Add(_FirstNumber.ToString());
             }
             else
             {
                 // Assign every other number to this current number.
                 _LatestNumber = userAnswer;
+                _CurrentCalculation.Add(_LatestNumber.ToString());
             }
         }
 
