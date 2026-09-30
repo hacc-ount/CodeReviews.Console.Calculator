@@ -28,17 +28,10 @@ catch (Exception ex)
 CalculatorLibrary calculator = new CalculatorLibrary();
 while (!endApp)
 {
-    // Show menu options and assign choice.
-     Enums.MenuChoice menuChoice = AnsiConsole.Prompt(
-        new SelectionPrompt<Enums.MenuChoice>()
-        .Title("Select an operation:")
-        .AddChoices(Enum.GetValues<Enums.MenuChoice>())
-        );
-
-    // Try to set the menu choice
+    // First number input
     try
     {
-        calculator.SetMenuChoice(menuChoice);
+        calculator.GetInput();
     }
     catch (Exception ex)
     {
@@ -47,6 +40,28 @@ while (!endApp)
         Messages.ErrorPressAnyKey();
     }
     
+   // Update the display panel with "Latest number"
+    calcInterface.UpdateLatestNumberPanel(calculator._LatestNumber);
+
+    // Show menu options and assign choice.
+    Enums.OperationChoice menuChoice = AnsiConsole.Prompt(
+       new SelectionPrompt<Enums.OperationChoice>()
+       .Title("Select an operation:")
+       .AddChoices(Enum.GetValues<Enums.OperationChoice>())
+       );
+
+    // Try to set the menu choice
+    try
+    {
+        calculator.SetOperation(menuChoice);
+    }
+    catch (Exception ex)
+    {
+        endApp = true;
+        Messages.Print(ex.Message, Styles.ErrorStyle);
+        Messages.ErrorPressAnyKey();
+    }
+
     // Try update calculation symbol
     try
     {
@@ -59,18 +74,10 @@ while (!endApp)
         Messages.ErrorPressAnyKey();
     }
 
-    // First number input
-    calculator.GetInput();
-    calculator.UpdateCurrentCalculation();
-    calcInterface.UpdateDisplayPanel(calculator._CurrentCalculation);
+    // Update and display the grid
     calcInterface.UpdateMainGrid();
     calcInterface.DisplayGrid();
-
-    // Second number input
-    calculator.GetInput();
-    calculator.DoOperation();
-    calculator.UpdateCurrentCalculation();
-
+/*
     // Update calculations list
     calculator.UpdateCalculationsList();
 
@@ -82,7 +89,7 @@ while (!endApp)
     
 
     // Reset some validation properties
-    calculator.ResetInputValidation();
+    calculator.ResetInputValidation(); */
 
 }
 calculator.FinishJsonWriter();

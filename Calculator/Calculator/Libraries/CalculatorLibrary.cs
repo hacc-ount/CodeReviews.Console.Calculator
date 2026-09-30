@@ -11,15 +11,13 @@ namespace Calculator.Libraries
     internal class CalculatorLibrary
     {
         JsonWriter writer;
-        internal Enum _MenuChoice { get; private set; } = Enums.Default.Default;
-        private int _UseCounter { get; set; } = 0;
-        internal double _UserFirstInput { get; private set; } = 0;
-        internal double _UserSecondInput { get; private set; } = 0;
+        internal Enum _OperationChoice { get; private set; } = Enums.Default.Default;
+        internal double _FirstNumber { get; private set; } = double.NaN;
+        
+        internal double _LatestNumber { get; private set; } = double.NaN;
 
-        private bool _FirstInputInputted { get; set; } = false;
-        private bool _SecondInputInputted { get; set; } = false;
         internal double _Result { get; private set; } = 0;
-        private string _CurrentMethodSymbol { get; set; } = "@";
+        private string _CurrentOperationSymbol { get; set; } = "@";
         internal string _CurrentCalculation { get; private set; } = "";
 
         internal List<string> Calculations { get; private set; } = new List<string>();
@@ -35,37 +33,37 @@ namespace Calculator.Libraries
             writer.WriteStartArray();
         }
 
-        internal void SetMenuChoice(Enum menuChoice)
+        internal void SetOperation(Enum menuChoice)
         {
             // If the menuChoice is not in the defined enum value
-            if (!Enum.IsDefined(typeof(Enums.MenuChoice), menuChoice))
+            if (!Enum.IsDefined(typeof(Enums.OperationChoice), menuChoice))
             {
                 throw new InvalidEnumArgumentException("InvalidEnumArgumentException: MenuChoice somehow falls outside of the defined Enum.\n");
             }
             else
             {
-                this._MenuChoice = menuChoice;
+                this._OperationChoice = menuChoice;
             }
         }
 
         internal void UpdateMethodSymbol()
         {
-            switch (_MenuChoice)
+            switch (_OperationChoice)
             {
-                case Enums.MenuChoice.Add:
-                    _CurrentMethodSymbol = "+";
+                case Enums.OperationChoice.Add:
+                    _CurrentOperationSymbol = "+";
                     break;
-                case Enums.MenuChoice.Subtract:
-                    _CurrentMethodSymbol = "-";
+                case Enums.OperationChoice.Subtract:
+                    _CurrentOperationSymbol = "-";
                     break;
-                case Enums.MenuChoice.Multiply:
-                    _CurrentMethodSymbol = "*";
+                case Enums.OperationChoice.Multiply:
+                    _CurrentOperationSymbol = "*";
                     break;
-                case Enums.MenuChoice.Divide:
-                    _CurrentMethodSymbol = "/";
+                case Enums.OperationChoice.Divide:
+                    _CurrentOperationSymbol = "/";
                     break;
                 case Enums.Default.Default:
-                    _CurrentMethodSymbol = "@";
+                    _CurrentOperationSymbol = "@";
                     throw new InvalidOperationException("InvalidOperationException: Not a valid menuChoice symbol");
             }
         }
@@ -73,22 +71,25 @@ namespace Calculator.Libraries
         // Function fo singular input.
         internal void GetInput()
         {
-            if (_FirstInputInputted == false)
+            double userAnswer = AnsiConsole.Ask<double>($"[{Styles.TextColorStyle}]Enter a number:[/]");
+            if (userAnswer == double.NaN)
             {
-                double userAnswer = AnsiConsole.Ask<double>($"[{Styles.TextColorStyle}]Enter first number:[/]");
-                _UserFirstInput = userAnswer;
-                _FirstInputInputted = true;
+                throw new InvalidDataException("InvalidDataExcpetion: User input was NaN.");
+            }
+            else if (_FirstNumber == double.NaN)
+            {
+                // If no first number has been input, assign it
+                _FirstNumber = userAnswer;
             }
             else
             {
-                double secondAnswer = AnsiConsole.Ask<double>($"[{Styles.TextColorStyle}]Enter second number:[/]");
-                _UserSecondInput = secondAnswer;
-                _SecondInputInputted = true;
-            }   
+                // Assign every other number to this current number.
+                _LatestNumber = userAnswer;
+            }
         }
 
         // Function only used during division operation when trying to divide by zero
-        private void GetValidDivisionNumber()
+      /*  private void GetValidDivisionNumber()
         {
             double userAnswer = 0;
 
@@ -98,35 +99,35 @@ namespace Calculator.Libraries
                 userAnswer = AnsiConsole.Ask<double>($"[{Styles.TextColorStyle}]Enter a number that's not zero:[/] ");
             }
 
-            _UserSecondInput = userAnswer;
+            _CurrentUserInput = userAnswer;
 
-        }
+        }*/
 
         internal void DoOperation()
         {
             double result = double.NaN;
-            writer.WriteStartObject();
+            /*writer.WriteStartObject();
             writer.WritePropertyName("Operand1");
             writer.WriteValue(_UserFirstInput);
             writer.WritePropertyName("Operand2");
             writer.WriteValue(_UserSecondInput);
-            writer.WritePropertyName("Operation");
+            writer.WritePropertyName("Operation");*/
 
-            switch (_MenuChoice)
+           /* switch (_OperationChoice)
             {
-                case Enums.MenuChoice.Add:
-                    result = _UserFirstInput + _UserSecondInput;
-                    writer.WriteValue("Add");
+                case Enums.OperationChoice.Add:
+                    result = _CurrentUserInput + _UserSecondInput;
+                    //writer.WriteValue("Add");
                     break;
-                case Enums.MenuChoice.Subtract:
+                case Enums.OperationChoice.Subtract:
                     result = _UserFirstInput - _UserSecondInput;
-                    writer.WriteValue("Subtract");
+                    //writer.WriteValue("Subtract");
                     break;
-                case Enums.MenuChoice.Multiply:
+                case Enums.OperationChoice.Multiply:
                     result = _UserFirstInput * _UserSecondInput;
-                    writer.WriteValue("Multiply");
+                    //writer.WriteValue("Multiply");
                     break;
-                case Enums.MenuChoice.Divide:
+                case Enums.OperationChoice.Divide:
                     if (_UserSecondInput != 0)
                     {
                         result = _UserFirstInput / _UserSecondInput;
@@ -145,14 +146,14 @@ namespace Calculator.Libraries
             writer.WriteValue(_Result);
             writer.WriteEndObject();
             _Result = result;
-            // Update use counter here? maybe not...
+            // Update use counter here? maybe not...*/
         }
 
-        internal void UpdateCurrentCalculation()
+       /* internal void UpdateCurrentCalculation()
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(_UserFirstInput.ToString());
-            sb.Append($" {_CurrentMethodSymbol} ");
+            sb.Append($" {_CurrentOperationSymbol} ");
             if (_SecondInputInputted == false)
             {
                 _CurrentCalculation = sb.ToString();
@@ -163,22 +164,11 @@ namespace Calculator.Libraries
                 sb.Append($" = {_Result.ToString()}");
                 _CurrentCalculation = sb.ToString();
             } 
-        }
+        }*/
 
         internal void UpdateCalculationsList()
         {
             Calculations.Add(_CurrentCalculation);
-        }
-
-        internal void ResetInputValidation()
-        {
-            _FirstInputInputted = false;
-            _SecondInputInputted = false;
-        }
-
-        internal void UpdateUseCounter()
-        {
-            this._UseCounter += 1;
         }
 
         public void FinishJsonWriter()

@@ -25,6 +25,7 @@ namespace Calculator.Interface
 
         private Panel _DisplayPanel { get; set; } = new Panel("----------") { Width = 30 }.Header("Display");
         private Panel _CalculationsPanel { get; set; } = new Panel("----------") { Width = 30 }.Header("Past Calculations");
+        private Panel _LatestNumberPanel { get; set; } = new Panel("--") { Width = 30 }.Header("Latest Number");
 
         // Class constructor
         internal CalcInterface()
@@ -59,6 +60,11 @@ namespace Calculator.Interface
             _CalculationsPanel = new Panel(sb.ToString()) { Width = 30 }.Header("Calculations");
         }
 
+        internal void UpdateLatestNumberPanel(double number)
+        {
+            _LatestNumberPanel = new Panel(number.ToString()) { Width = 20 }.Header("Latest Number");
+        }
+
         // Function updates root grid with new panels (fake live updates)
         internal void UpdateMainGrid()
         {
@@ -66,6 +72,7 @@ namespace Calculator.Interface
             MainGrid = SetGridTemplate();
             MainGrid.AddRow(_CalculationsPanel);
             MainGrid.AddRow(_DisplayPanel);
+            MainGrid.AddRow(_LatestNumberPanel);
         }
 
         // Function writes the root layout variable

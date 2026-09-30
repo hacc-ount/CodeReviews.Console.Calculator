@@ -2,7 +2,7 @@
 {
     internal static class Enums
     {
-        internal enum MenuChoice
+        internal enum OperationChoice
         {
             Add,
             Subtract,
