@@ -39,15 +39,19 @@ while (!endApp)
         Messages.Print(ex.Message, Styles.ErrorStyle);
         Messages.ErrorPressAnyKey();
     }
-    
-    
-
-    // Do operation (only if two numbers exist).
-    calculator.CheckCanOperate();
-    calculator.DoOperation();
 
     // Update the display panel with "Latest number"
     calcInterface.UpdateLatestNumberPanel(calculator._Result);
+
+    // Do operation (only if two numbers exist).
+    if (calculator.CheckCanOperate())
+    {
+        calculator.DoOperation();
+        // Update and display the grid
+        calcInterface.UpdateMainGrid();
+        calcInterface.DisplayGrid();
+    }
+    
 
     // Show menu options and assign choice.
     Enums.OperationChoice menuChoice = AnsiConsole.Prompt(

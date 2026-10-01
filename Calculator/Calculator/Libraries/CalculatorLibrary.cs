@@ -14,7 +14,7 @@ namespace Calculator.Libraries
         internal Enum _OperationChoice { get; private set; } = Enums.Default.Default;
 
         private bool _OperationStart { get; set; } = false;
-        internal double _LastNumber { get; private set; } = double.NaN;
+        //internal double _LastNumber { get; private set; } = double.NaN;
         
         internal double _LatestNumber { get; private set; } = double.NaN;
 
@@ -78,11 +78,11 @@ namespace Calculator.Libraries
             {
                 throw new InvalidDataException("InvalidDataExcpetion: User input was NaN.");
             }
-            else if (double.IsNaN(_LastNumber))
+            else if (double.IsNaN(_Result))
             {
                 // If no first number has been input, assign it
-                _LastNumber = userAnswer;
-                _CurrentCalculation.Add(_LastNumber.ToString());
+                _Result = userAnswer;
+                _CurrentCalculation.Add(_Result.ToString());
             }
             else
             {
@@ -95,25 +95,23 @@ namespace Calculator.Libraries
         // Function to do the operation
         internal void DoOperation()
         {
-            if (_OperationStart == true)
-            {
                 switch (_OperationChoice)
                 {
                     case Enums.OperationChoice.Add:
                         if (double.IsNaN(_Result))
                         {
-                            _Result = _LastNumber + _LatestNumber;
+                            _Result = _Result + _LatestNumber;
                         }
                         else
                         {
-                            _Result = _LatestNumber + _Result;
+                            _Result = _Result + _LatestNumber;
                         }
                         //writer.WriteValue("Add");
                         break;
                     case Enums.OperationChoice.Subtract:
                         if (double.IsNaN(_Result))
                         {
-                            _Result = _LastNumber - _LatestNumber;
+                            _Result = _Result - _LatestNumber;
                         }
                         else
                         {
@@ -124,7 +122,7 @@ namespace Calculator.Libraries
                     case Enums.OperationChoice.Multiply:
                         if (double.IsNaN(_Result))
                         {
-                            _Result = _LastNumber * _LatestNumber;
+                            _Result = _Result * _LatestNumber;
                         }
                         else
                         {
@@ -137,12 +135,12 @@ namespace Calculator.Libraries
                         {
                             if (_LatestNumber != 0)
                             {
-                                _Result = _LastNumber / _LatestNumber;
+                                _Result = _Result / _LatestNumber;
                             }
                             else
                             {
                                 GetValidDivisionNumber();
-                                _Result = _LastNumber / _LatestNumber;
+                                _Result = _Result / _LatestNumber;
                             }
                         }
                         else
@@ -163,6 +161,7 @@ namespace Calculator.Libraries
                         break;
                 }
             }
+
             /*writer.WriteStartObject();
             writer.WritePropertyName("Operand1");
             writer.WriteValue(_UserFirstInput);
@@ -176,7 +175,7 @@ namespace Calculator.Libraries
             writer.WriteEndObject();
             _Result = result;
             // Update use counter here? maybe not...*/
-        }
+        
 
         // Function only used during division operation when trying to divide by zero
         private void GetValidDivisionNumber()
@@ -211,11 +210,15 @@ namespace Calculator.Libraries
          }*/
 
         // Check if operations can start
-        internal void CheckCanOperate()
+        internal bool CheckCanOperate()
         {
-            if (!double.IsNaN(_LastNumber) && !double.IsNaN(_LatestNumber))
+            if (!double.IsNaN(_Result) && !double.IsNaN(_LatestNumber))
             {
-                _OperationStart = true;
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
 
