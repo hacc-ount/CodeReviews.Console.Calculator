@@ -117,7 +117,7 @@ namespace Calculator.Libraries
                         }
                         else
                         {
-                            _Result = _LatestNumber - _Result;
+                            _Result = _Result - _LatestNumber;
                         }
                         //writer.WriteValue("Subtract");
                         break;
@@ -128,7 +128,7 @@ namespace Calculator.Libraries
                         }
                         else
                         {
-                            _Result = _LatestNumber * _Result;
+                            _Result = _Result * _LatestNumber;
                         }
                         //writer.WriteValue("Multiply");
                         break;
@@ -149,15 +149,15 @@ namespace Calculator.Libraries
                         {
                             if (_LatestNumber != 0)
                             {
-                                _Result = _LatestNumber / _Result;
+                                _Result = _Result / _LatestNumber;
                             }
                             else
                             {
                                 GetValidDivisionNumber();
-                                _Result = _LatestNumber / _Result;
+                                _Result = _Result / _LatestNumber;
                             }
                         }
-                        writer.WriteValue("Divide");
+                        //writer.WriteValue("Divide");
                         break;
                     default:
                         break;
