@@ -28,7 +28,7 @@ catch (Exception ex)
 CalculatorLibrary calculator = new CalculatorLibrary();
 while (!endApp)
 {
-    // First number input
+    // Number input
     try
     {
         calculator.GetInput();
@@ -40,8 +40,10 @@ while (!endApp)
         Messages.ErrorPressAnyKey();
     }
     
-   // Update the display panel with "Latest number"
+    // Update the display panel with "Latest number"
     calcInterface.UpdateLatestNumberPanel(calculator._LatestNumber);
+
+    // Do operation (only if two numbers exist).
 
     // Show menu options and assign choice.
     Enums.OperationChoice menuChoice = AnsiConsole.Prompt(

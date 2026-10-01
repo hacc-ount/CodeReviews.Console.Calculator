@@ -20,7 +20,7 @@ namespace Calculator.Libraries
         private string _CurrentOperationSymbol { get; set; } = "@";
         internal List<string> _CurrentCalculation { get; private set; } = new List<string>();
 
-        internal List<string> Calculations { get; private set; } = new List<string>();
+        internal List<List<string>> Calculations { get; private set; } = new List<List<string>>();
 
         public CalculatorLibrary()
         {
