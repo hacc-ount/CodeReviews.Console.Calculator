@@ -12,11 +12,13 @@ namespace Calculator.Libraries
     {
         JsonWriter writer;
         internal Enum _OperationChoice { get; private set; } = Enums.Default.Default;
-        internal double _FirstNumber { get; private set; } = double.NaN;
+
+        private bool _OperationStart { get; set; } = false;
+        internal double _LastNumber { get; private set; } = double.NaN;
         
         internal double _LatestNumber { get; private set; } = double.NaN;
 
-        internal double _Result { get; private set; } = 0;
+        internal double _Result { get; private set; } = double.NaN;
         private string _CurrentOperationSymbol { get; set; } = "@";
         internal List<string> _CurrentCalculation { get; private set; } = new List<string>();
 
@@ -72,15 +74,15 @@ namespace Calculator.Libraries
         internal void GetInput()
         {
             double userAnswer = AnsiConsole.Ask<double>($"[{Styles.TextColorStyle}]Enter a number:[/]");
-            if (userAnswer == double.NaN)
+            if (double.IsNaN(userAnswer))
             {
                 throw new InvalidDataException("InvalidDataExcpetion: User input was NaN.");
             }
-            else if (_FirstNumber == double.NaN)
+            else if (double.IsNaN(_LastNumber))
             {
                 // If no first number has been input, assign it
-                _FirstNumber = userAnswer;
-                _CurrentCalculation.Add(_FirstNumber.ToString());
+                _LastNumber = userAnswer;
+                _CurrentCalculation.Add(_LastNumber.ToString());
             }
             else
             {
@@ -90,8 +92,94 @@ namespace Calculator.Libraries
             }
         }
 
+        // Function to do the operation
+        internal void DoOperation()
+        {
+            if (_OperationStart == true)
+            {
+                switch (_OperationChoice)
+                {
+                    case Enums.OperationChoice.Add:
+                        if (double.IsNaN(_Result))
+                        {
+                            _Result = _LastNumber + _LatestNumber;
+                        }
+                        else
+                        {
+                            _Result = _LatestNumber + _Result;
+                        }
+                        //writer.WriteValue("Add");
+                        break;
+                    case Enums.OperationChoice.Subtract:
+                        if (double.IsNaN(_Result))
+                        {
+                            _Result = _LastNumber - _LatestNumber;
+                        }
+                        else
+                        {
+                            _Result = _LatestNumber - _Result;
+                        }
+                        //writer.WriteValue("Subtract");
+                        break;
+                    case Enums.OperationChoice.Multiply:
+                        if (double.IsNaN(_Result))
+                        {
+                            _Result = _LastNumber * _LatestNumber;
+                        }
+                        else
+                        {
+                            _Result = _LatestNumber * _Result;
+                        }
+                        //writer.WriteValue("Multiply");
+                        break;
+                    case Enums.OperationChoice.Divide:
+                        if (double.IsNaN(_Result))
+                        {
+                            if (_LatestNumber != 0)
+                            {
+                                _Result = _LastNumber / _LatestNumber;
+                            }
+                            else
+                            {
+                                GetValidDivisionNumber();
+                                _Result = _LastNumber / _LatestNumber;
+                            }
+                        }
+                        else
+                        {
+                            if (_LatestNumber != 0)
+                            {
+                                _Result = _LatestNumber / _Result;
+                            }
+                            else
+                            {
+                                GetValidDivisionNumber();
+                                _Result = _LatestNumber / _Result;
+                            }
+                        }
+                        writer.WriteValue("Divide");
+                        break;
+                    default:
+                        break;
+                }
+            }
+            /*writer.WriteStartObject();
+            writer.WritePropertyName("Operand1");
+            writer.WriteValue(_UserFirstInput);
+            writer.WritePropertyName("Operand2");
+            writer.WriteValue(_UserSecondInput);
+            writer.WritePropertyName("Operation");*/
+
+           /* 
+            writer.WritePropertyName("Result");
+            writer.WriteValue(_Result);
+            writer.WriteEndObject();
+            _Result = result;
+            // Update use counter here? maybe not...*/
+        }
+
         // Function only used during division operation when trying to divide by zero
-      /*  private void GetValidDivisionNumber()
+        private void GetValidDivisionNumber()
         {
             double userAnswer = 0;
 
@@ -101,72 +189,35 @@ namespace Calculator.Libraries
                 userAnswer = AnsiConsole.Ask<double>($"[{Styles.TextColorStyle}]Enter a number that's not zero:[/] ");
             }
 
-            _CurrentUserInput = userAnswer;
+            _LatestNumber = userAnswer;
 
-        }*/
-
-        internal void DoOperation()
-        {
-            double result = double.NaN;
-            /*writer.WriteStartObject();
-            writer.WritePropertyName("Operand1");
-            writer.WriteValue(_UserFirstInput);
-            writer.WritePropertyName("Operand2");
-            writer.WriteValue(_UserSecondInput);
-            writer.WritePropertyName("Operation");*/
-
-           /* switch (_OperationChoice)
-            {
-                case Enums.OperationChoice.Add:
-                    result = _CurrentUserInput + _UserSecondInput;
-                    //writer.WriteValue("Add");
-                    break;
-                case Enums.OperationChoice.Subtract:
-                    result = _UserFirstInput - _UserSecondInput;
-                    //writer.WriteValue("Subtract");
-                    break;
-                case Enums.OperationChoice.Multiply:
-                    result = _UserFirstInput * _UserSecondInput;
-                    //writer.WriteValue("Multiply");
-                    break;
-                case Enums.OperationChoice.Divide:
-                    if (_UserSecondInput != 0)
-                    {
-                        result = _UserFirstInput / _UserSecondInput;
-                    }
-                    else
-                    {
-                        GetValidDivisionNumber();
-                        result = _UserFirstInput / _UserSecondInput;
-                    }
-                    writer.WriteValue("Divide");
-                    break;
-                default:
-                    break;
-            }
-            writer.WritePropertyName("Result");
-            writer.WriteValue(_Result);
-            writer.WriteEndObject();
-            _Result = result;
-            // Update use counter here? maybe not...*/
         }
 
-       /* internal void UpdateCurrentCalculation()
+        /* internal void UpdateCurrentCalculation()
+         {
+             StringBuilder sb = new StringBuilder();
+             sb.Append(_UserFirstInput.ToString());
+             sb.Append($" {_CurrentOperationSymbol} ");
+             if (_SecondInputInputted == false)
+             {
+                 _CurrentCalculation = sb.ToString();
+             }
+             else
+             {
+                 sb.Append(_UserSecondInput.ToString());
+                 sb.Append($" = {_Result.ToString()}");
+                 _CurrentCalculation = sb.ToString();
+             } 
+         }*/
+
+        // Check if operations can start
+        internal void CheckCanOperate()
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append(_UserFirstInput.ToString());
-            sb.Append($" {_CurrentOperationSymbol} ");
-            if (_SecondInputInputted == false)
+            if (!double.IsNaN(_LastNumber) && !double.IsNaN(_LatestNumber))
             {
-                _CurrentCalculation = sb.ToString();
+                _OperationStart = true;
             }
-            else
-            {
-                sb.Append(_UserSecondInput.ToString());
-                sb.Append($" = {_Result.ToString()}");
-                _CurrentCalculation = sb.ToString();
-            } 
-        }*/
+        }
 
         internal void UpdateCalculationsList()
         {

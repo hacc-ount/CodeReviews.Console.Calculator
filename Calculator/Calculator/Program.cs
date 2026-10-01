@@ -40,10 +40,14 @@ while (!endApp)
         Messages.ErrorPressAnyKey();
     }
     
-    // Update the display panel with "Latest number"
-    calcInterface.UpdateLatestNumberPanel(calculator._LatestNumber);
+    
 
     // Do operation (only if two numbers exist).
+    calculator.CheckCanOperate();
+    calculator.DoOperation();
+
+    // Update the display panel with "Latest number"
+    calcInterface.UpdateLatestNumberPanel(calculator._Result);
 
     // Show menu options and assign choice.
     Enums.OperationChoice menuChoice = AnsiConsole.Prompt(
