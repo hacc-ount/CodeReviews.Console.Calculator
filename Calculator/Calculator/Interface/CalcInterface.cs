@@ -71,6 +71,7 @@ namespace Calculator.Interface
             switch (choice)
             {
                 case Enums.MenuChoice.Calculate:
+                    MainGrid = SetGridTemplate();
                     MainGrid.AddRow(_DisplayPanel);
                     MainGrid.AddRow(_LatestNumberPanel);
                     break;
