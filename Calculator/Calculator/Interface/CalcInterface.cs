@@ -44,10 +44,15 @@ namespace Calculator.Interface
         }
 
         // Function to create and update display panel
-        internal void UpdateDisplayPanel(string calculation)
+        internal void UpdateDisplayPanel(List<string> currentCalculations)
         {
+            StringBuilder sb = new StringBuilder();
+            foreach (string calculation in currentCalculations)
+            {
+                sb.Append(calculation);
+            }
             // Update with latest calculation (String)
-            _DisplayPanel = new Panel(calculation) { Width = 30 }.Header("Display");
+            _DisplayPanel = new Panel(sb.ToString()) { Width = 30 }.Header("Display");
         }
 
         internal void UpdateCalculationsPanel(List<string> calculationList)
@@ -72,7 +77,7 @@ namespace Calculator.Interface
             {
                 case Enums.MenuChoice.Calculate:
                     MainGrid = SetGridTemplate();
-                    MainGrid.AddRow(_DisplayPanel);
+                    MainGrid.AddRow(_CalculationsPanel);
                     MainGrid.AddRow(_LatestNumberPanel);
                     break;
                 case Enums.MenuChoice.View_Calculations:

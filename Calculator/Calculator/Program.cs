@@ -70,11 +70,21 @@ while (!endApp)
         // Do operation (only if two numbers exist)
         if (calculator.CheckCanOperate())
         {
-            calculator.DoOperation();
+            try
+            {
+                calculator.DoOperation();
+            }
+            catch (Exception ex)
+            {
+                endApp = true;
+                Messages.Print(ex.Message, Styles.ErrorStyle);
+                Messages.ErrorPressAnyKey();
+            }
         }
 
         // Update the display panel with "Latest number"
         calcInterface.UpdateLatestNumberPanel(calculator._Result);
+        calcInterface.UpdateCalculationsPanel(calculator._CurrentCalculation);
 
         // Update and display the grid
         calcInterface.UpdateMainGrid(Enums.MenuChoice.Calculate);

@@ -81,77 +81,80 @@ namespace Calculator.Libraries
             {
                 // If no first number has been input, assign it
                 _Result = userAnswer;
-                _CurrentCalculation.Add(_Result.ToString());
+                //_CurrentCalculation.Add(_Result.ToString());
             }
             else
             {
                 // Assign every other number to this current number.
                 _LatestNumber = userAnswer;
-                _CurrentCalculation.Add(_LatestNumber.ToString());
+                //_CurrentCalculation.Add(_LatestNumber.ToString());
             }
         }
 
         // Function to do the operation
         internal void DoOperation()
         {
+            double temp = 0;
                 switch (_OperationChoice)
                 {
                     case Enums.OperationChoice.Add:
                         if (double.IsNaN(_Result))
                         {
-                            _Result = _Result + _LatestNumber;
+                            throw new NotFiniteNumberException("NotFiniteNumberException: Number is NaN");
                         }
                         else
                         {
+                            temp = _Result;
                             _Result = _Result + _LatestNumber;
+                            UpdateCurrentCalculation(temp, _LatestNumber, "+", _Result);
                         }
                         //writer.WriteValue("Add");
                         break;
                     case Enums.OperationChoice.Subtract:
                         if (double.IsNaN(_Result))
                         {
-                            _Result = _Result - _LatestNumber;
+                            throw new NotFiniteNumberException("NotFiniteNumberException: Number is NaN");
                         }
                         else
                         {
+                            temp = _Result;
                             _Result = _Result - _LatestNumber;
+                            UpdateCurrentCalculation(temp, _LatestNumber, "-", _Result);
                         }
                         //writer.WriteValue("Subtract");
                         break;
                     case Enums.OperationChoice.Multiply:
                         if (double.IsNaN(_Result))
                         {
-                            _Result = _Result * _LatestNumber;
+                            throw new NotFiniteNumberException("NotFiniteNumberException: Number is NaN");
                         }
                         else
                         {
+                            temp = _Result;
                             _Result = _Result * _LatestNumber;
+                            UpdateCurrentCalculation(temp, _LatestNumber, "*", _Result);
                         }
                         //writer.WriteValue("Multiply");
                         break;
                     case Enums.OperationChoice.Divide:
                         if (double.IsNaN(_Result))
                         {
-                            if (_LatestNumber != 0)
-                            {
-                                _Result = _Result / _LatestNumber;
-                            }
-                            else
-                            {
-                                GetValidDivisionNumber();
-                                _Result = _Result / _LatestNumber;
-                            }
+                            throw new NotFiniteNumberException("NotFiniteNumberException: Number is NaN");
                         }
                         else
                         {
                             if (_LatestNumber != 0)
                             {
+                                temp = _Result;
                                 _Result = _Result / _LatestNumber;
+                                UpdateCurrentCalculation(temp, _LatestNumber, "/", _Result);
                             }
                             else
                             {
                                 GetValidDivisionNumber();
+                                temp = _Result;
                                 _Result = _Result / _LatestNumber;
+                                UpdateCurrentCalculation(temp, _LatestNumber, "/", _Result);
                             }
                         }
                     //writer.WriteValue("Divide");
@@ -189,6 +192,17 @@ namespace Calculator.Libraries
 
             _LatestNumber = userAnswer;
 
+        }
+
+        internal void UpdateCurrentCalculation(double firstNumber, double secondNumber, string operation, double result)
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append($"{firstNumber.ToString()} ");
+            sb.Append($" {operation} ");
+            sb.Append($" {secondNumber.ToString()}");
+            sb.Append($" = {result}");
+            sb.Append(" -> "); // For seperating the next operation;
+            _CurrentCalculation.Add(sb.ToString());
         }
 
         /* internal void UpdateCurrentCalculation()
