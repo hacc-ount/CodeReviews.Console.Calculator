@@ -20,9 +20,6 @@ namespace Calculator.Interface
         //Grids
         internal Grid MainGrid { get; private set; } = new Grid();
         //Panels
-        private Panel defaultDisplayPanel = new Panel("Defaultghghghg") { Width = 30 }.Header("Display");
-        private Panel defaultCalcListPanel = new Panel("Defaultccc") { Width = 30 }.Header("Calculations");
-
         private Panel _DisplayPanel { get; set; } = new Panel("----------") { Width = 30 }.Header("Display");
         private Panel _CalculationsPanel { get; set; } = new Panel("----------") { Width = 30 }.Header("Past Calculations");
         private Panel _LatestNumberPanel { get; set; } = new Panel("--") { Width = 30 }.Header("Latest Number");
@@ -44,23 +41,18 @@ namespace Calculator.Interface
         }
 
         // Function to create and update display panel
-        internal void UpdateDisplayPanel(List<string> currentCalculations)
+        internal void UpdateDisplayPanel()
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (string calculation in currentCalculations)
-            {
-                sb.Append(calculation);
-            }
-            // Update with latest calculation (String)
-            _DisplayPanel = new Panel(sb.ToString()) { Width = 30 }.Header("Display");
+            
         }
 
-        internal void UpdateCalculationsPanel(List<string> calculationList)
+        // Function to create and update calculations pannel
+        internal void UpdateCalculationsPanel(List<string> ongoingCalculation)
         {
             StringBuilder sb = new StringBuilder();
-            foreach (string calculation in calculationList)
+            foreach (string calculation in ongoingCalculation)
             {
-                sb.Append($"> {calculation}\n");
+                sb.Append(calculation);
             }
             _CalculationsPanel = new Panel(sb.ToString()) { Width = 30 }.Header("Calculations");
         }
@@ -82,7 +74,7 @@ namespace Calculator.Interface
                     break;
                 case Enums.MenuChoice.View_Calculations:
                     MainGrid = SetGridTemplate();
-                    MainGrid.AddRow(_CalculationsPanel);
+                    //MainGrid.AddRow(_CalculationsPanel);
                     break;
             }
         }
