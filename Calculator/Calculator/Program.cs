@@ -10,6 +10,7 @@ using Spectre.Console;
 
 // Set initial variables
 bool endApp = false;
+bool calculating = false;
 
 // Initialize the programs interface
 CalcInterface calcInterface = new CalcInterface();
@@ -28,63 +29,90 @@ catch (Exception ex)
 CalculatorLibrary calculator = new CalculatorLibrary();
 while (!endApp)
 {
-    // Number input
-    try
-    {
-        calculator.GetInput();
-    }
-    catch (Exception ex)
-    {
-        endApp = true;
-        Messages.Print(ex.Message, Styles.ErrorStyle);
-        Messages.ErrorPressAnyKey();
-    }
-
-    
-
-    // Do operation (only if two numbers exist).
-    if (calculator.CheckCanOperate())
-    {
-        calculator.DoOperation();
-    }
-
-    // Update the display panel with "Latest number"
-    calcInterface.UpdateLatestNumberPanel(calculator._Result);
-    // Update and display the grid
-    calcInterface.UpdateMainGrid();
-    calcInterface.DisplayGrid();
-
-
     // Show menu options and assign choice.
-    Enums.OperationChoice menuChoice = AnsiConsole.Prompt(
-       new SelectionPrompt<Enums.OperationChoice>()
-       .Title("Select an operation:")
-       .AddChoices(Enum.GetValues<Enums.OperationChoice>())
+    Enums.MenuChoice menuChoice = AnsiConsole.Prompt(
+       new SelectionPrompt<Enums.MenuChoice>()
+       .Title("Select an option:")
+       .AddChoices(Enum.GetValues<Enums.MenuChoice>())
        );
 
-    // Try to set the menu choice
-    try
+    switch (menuChoice)
     {
-        calculator.SetOperation(menuChoice);
-    }
-    catch (Exception ex)
-    {
-        endApp = true;
-        Messages.Print(ex.Message, Styles.ErrorStyle);
-        Messages.ErrorPressAnyKey();
+        case Enums.MenuChoice.Calculate:
+            calculating = true;
+            break;
+        case Enums.MenuChoice.View_Calculations:
+            calculating = false;
+            // Display calculations
+            break;
+        case Enums.MenuChoice.Close:
+            endApp = true;
+            break;
+        default:
+            endApp = true;
+            break;
     }
 
-    // Try update calculation symbol
-    try
+    while (calculating)
     {
-        calculator.UpdateMethodSymbol();
+        // Get the users input (singular number)
+        try
+        {
+            calculator.GetInput();
+        }
+        catch (Exception ex)
+        {
+            endApp = true;
+            Messages.Print(ex.Message, Styles.ErrorStyle);
+            Messages.ErrorPressAnyKey();
+        }
+
+        // Do operation (only if two numbers exist)
+        if (calculator.CheckCanOperate())
+        {
+            calculator.DoOperation();
+        }
+
+        // Update the display panel with "Latest number"
+        calcInterface.UpdateLatestNumberPanel(calculator._Result);
+
+        // Update and display the grid
+        calcInterface.UpdateMainGrid(Enums.MenuChoice.Calculate);
+        calcInterface.DisplayGrid();
+
+        // Show operation types and assign the users choice
+        Enums.OperationChoice operationChoice = AnsiConsole.Prompt(
+           new SelectionPrompt<Enums.OperationChoice>()
+           .Title("Select an operation:")
+           .AddChoices(Enum.GetValues<Enums.OperationChoice>())
+           );
+
+        // Try set the menu choice
+        try
+        {
+            calculator.SetOperation(operationChoice);
+        }
+        catch (Exception ex)
+        {
+            endApp = true;
+            Messages.Print(ex.Message, Styles.ErrorStyle);
+            Messages.ErrorPressAnyKey();
+        }
+
+        // Try update calculation symbol
+        try
+        {
+            calculator.UpdateMethodSymbol();
+        }
+        catch (Exception ex)
+        {
+            endApp = true;
+            Messages.Print(ex.Message, Styles.ErrorStyle);
+            Messages.ErrorPressAnyKey();
+        }
+
     }
-    catch (Exception ex)
-    {
-        endApp = true;
-        Messages.Print(ex.Message, Styles.ErrorStyle);
-        Messages.ErrorPressAnyKey();
-    }
+    
 /*
     // Update calculations list
     calculator.UpdateCalculationsList();

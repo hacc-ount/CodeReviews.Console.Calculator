@@ -14,7 +14,6 @@ namespace Calculator.Libraries
         internal Enum _OperationChoice { get; private set; } = Enums.Default.Default;
 
         private bool _OperationStart { get; set; } = false;
-        //internal double _LastNumber { get; private set; } = double.NaN;
         
         internal double _LatestNumber { get; private set; } = double.NaN;
 
@@ -155,7 +154,7 @@ namespace Calculator.Libraries
                                 _Result = _Result / _LatestNumber;
                             }
                         }
-                        //writer.WriteValue("Divide");
+                    //writer.WriteValue("Divide");
                         break;
                     default:
                         break;

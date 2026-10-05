@@ -66,13 +66,19 @@ namespace Calculator.Interface
         }
 
         // Function updates root grid with new panels (fake live updates)
-        internal void UpdateMainGrid()
+        internal void UpdateMainGrid(Enum choice)
         {
-            // Create a new grid with a column
-            MainGrid = SetGridTemplate();
-            MainGrid.AddRow(_CalculationsPanel);
-            MainGrid.AddRow(_DisplayPanel);
-            MainGrid.AddRow(_LatestNumberPanel);
+            switch (choice)
+            {
+                case Enums.MenuChoice.Calculate:
+                    MainGrid.AddRow(_DisplayPanel);
+                    MainGrid.AddRow(_LatestNumberPanel);
+                    break;
+                case Enums.MenuChoice.View_Calculations:
+                    MainGrid = SetGridTemplate();
+                    MainGrid.AddRow(_CalculationsPanel);
+                    break;
+            }
         }
 
         // Function writes the root layout variable
