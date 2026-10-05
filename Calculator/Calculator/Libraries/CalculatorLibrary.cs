@@ -21,7 +21,7 @@ namespace Calculator.Libraries
         private string _CurrentOperationSymbol { get; set; } = "@";
         internal List<string[]> _CurrentCalculation { get; private set; } = new List<string[]>();
 
-        internal List<List<string[]>> Calculations { get; private set; } = new List<List<string[]>>();
+        internal List<List<string[]>> _Calculations { get; private set; } = new List<List<string[]>>();
 
         public CalculatorLibrary()
         {
@@ -160,7 +160,8 @@ namespace Calculator.Libraries
                     //writer.WriteValue("Divide");
                         break;
                     case Enums.OperationChoice.Finish_Calculation:
-                        
+                        UpdateOverallCalculations(); // Update the overall calculations list
+                        _CurrentCalculation = new List<string[]>(); // Reset the current calculation
                         break;
                 default:
                         break;
@@ -197,6 +198,7 @@ namespace Calculator.Libraries
 
         }
 
+        // Update the current calculation (create an array and add it to a list).
         internal void UpdateCurrentCalculation(double firstNumber, double secondNumber, string operation, double result)
         {
             string[] calculation = new string[4];
@@ -209,22 +211,11 @@ namespace Calculator.Libraries
             _CurrentCalculation.Add(calculation);
         }
 
-        /* internal void UpdateCurrentCalculation()
-         {
-             StringBuilder sb = new StringBuilder();
-             sb.Append(_UserFirstInput.ToString());
-             sb.Append($" {_CurrentOperationSymbol} ");
-             if (_SecondInputInputted == false)
-             {
-                 _CurrentCalculation = sb.ToString();
-             }
-             else
-             {
-                 sb.Append(_UserSecondInput.ToString());
-                 sb.Append($" = {_Result.ToString()}");
-                 _CurrentCalculation = sb.ToString();
-             } 
-         }*/
+        // Update the overall calculation used in program run time
+        private void UpdateOverallCalculations()
+        {
+            _Calculations.Add(_CurrentCalculation);
+        }
 
         // Check if operations can start
         internal bool CheckCanOperate()
@@ -237,11 +228,6 @@ namespace Calculator.Libraries
             {
                 return false;
             }
-        }
-
-        internal void UpdateCalculationsList()
-        {
-            Calculations.Add(_CurrentCalculation);
         }
 
         public void FinishJsonWriter()
