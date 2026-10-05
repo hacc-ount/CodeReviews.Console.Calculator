@@ -47,12 +47,17 @@ namespace Calculator.Interface
         }
 
         // Function to create and update calculations pannel
-        internal void UpdateCalculationsPanel(List<string> ongoingCalculation)
+        internal void UpdateCalculationsPanel(List<string[]> ongoingCalculation)
         {
             StringBuilder sb = new StringBuilder();
-            foreach (string calculation in ongoingCalculation)
+            
+            foreach (string[] calculation in ongoingCalculation)
             {
-                sb.Append(calculation);
+                sb.Append($"{calculation[0]} ");
+                sb.Append($" {calculation[1]} ");
+                sb.Append($" {calculation[2]}");
+                sb.Append($" = {calculation[3]}");
+                sb.Append(" -> "); // For seperating the next operation;
             }
             _CalculationsPanel = new Panel(sb.ToString()) { Width = 30 }.Header("Calculations");
         }

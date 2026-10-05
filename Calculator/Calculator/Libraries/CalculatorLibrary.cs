@@ -19,9 +19,9 @@ namespace Calculator.Libraries
 
         internal double _Result { get; private set; } = double.NaN;
         private string _CurrentOperationSymbol { get; set; } = "@";
-        internal List<string> _CurrentCalculation { get; private set; } = new List<string>();
+        internal List<string[]> _CurrentCalculation { get; private set; } = new List<string[]>();
 
-        internal List<List<string>> Calculations { get; private set; } = new List<List<string>>();
+        internal List<List<string[]>> Calculations { get; private set; } = new List<List<string[]>>();
 
         public CalculatorLibrary()
         {
@@ -159,7 +159,10 @@ namespace Calculator.Libraries
                         }
                     //writer.WriteValue("Divide");
                         break;
-                    default:
+                    case Enums.OperationChoice.Finish_Calculation:
+                        
+                        break;
+                default:
                         break;
                 }
             }
@@ -196,13 +199,14 @@ namespace Calculator.Libraries
 
         internal void UpdateCurrentCalculation(double firstNumber, double secondNumber, string operation, double result)
         {
-            StringBuilder sb = new StringBuilder();
-            sb.Append($"{firstNumber.ToString()} ");
-            sb.Append($" {operation} ");
-            sb.Append($" {secondNumber.ToString()}");
-            sb.Append($" = {result}");
-            sb.Append(" -> "); // For seperating the next operation;
-            _CurrentCalculation.Add(sb.ToString());
+            string[] calculation = new string[4];
+            //Add each part of the calculation to the array
+            calculation[0] = firstNumber.ToString();
+            calculation[1] = operation;
+            calculation[2] = secondNumber.ToString();
+            calculation[3] = result.ToString();
+
+            _CurrentCalculation.Add(calculation);
         }
 
         /* internal void UpdateCurrentCalculation()

@@ -14,7 +14,8 @@
             Add,
             Subtract,
             Multiply,
-            Divide
+            Divide,
+            Finish_Calculation
         }
 
         internal enum Default
