@@ -10,7 +10,6 @@ using Spectre.Console;
 
 // Set initial variables
 bool endApp = false;
-bool calculating = false;
 
 // Initialize the programs interface
 CalcInterface calcInterface = new CalcInterface();
@@ -125,21 +124,6 @@ while (!endApp)
         }
 
     }
-    
-/*
-    // Update calculations list
-    calculator.UpdateCalculationsList();
-
-    calcInterface.UpdateDisplayPanel(calculator._CurrentCalculation);
-    calcInterface.UpdateCalculationsPanel(calculator.Calculations);
-    calcInterface.UpdateMainGrid();
-    calcInterface.DisplayGrid();
-
-    
-
-    // Reset some validation properties
-    calculator.ResetInputValidation(); */
-
 }
 calculator.FinishJsonWriter();
 return;

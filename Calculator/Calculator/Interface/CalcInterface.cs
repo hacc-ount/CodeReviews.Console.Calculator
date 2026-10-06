@@ -11,7 +11,8 @@ namespace Calculator.Interface
         internal static Style ErrorAnyKeyStyle { get; private set; } = new Style(foreground: Color.Red);
         internal static Style TextStyle { get; private set; } = new Style(foreground: Color.Honeydew2);
         internal static Color TextColorStyle { get; private set; } = Color.Honeydew2;
-    }
+        internal static Color BorderColorStyle { get; private set; } = Color.Aqua;
+     }
 
     // Class for the program interface
     internal class CalcInterface
@@ -59,7 +60,7 @@ namespace Calculator.Interface
                 sb.Append($"\n");
                 count++;
             }
-            _CalculationListPanel = new Panel(sb.ToString()) { Width = 30 }.Header("Calculations");
+            _CalculationListPanel = new Panel(sb.ToString()) { Width = 30 }.Header("Calculations").BorderColor(Styles.BorderColorStyle);
         }
 
         // Function to create and update calculations pannel
@@ -75,12 +76,12 @@ namespace Calculator.Interface
                 sb.Append($"= {calculation[3]}");
                 sb.Append(" -> "); // For seperating the next operation;*/
             }
-            _CalculationsPanel = new Panel(sb.ToString()) { Width = 30 }.Header("Calculations");
+            _CalculationsPanel = new Panel(sb.ToString()) { Width = 30 }.Header("Calculations").BorderColor(Styles.BorderColorStyle);
         }
 
         internal void UpdateLatestNumberPanel(double number)
         {
-            _LatestNumberPanel = new Panel(number.ToString()) { Width = 20 }.Header("Latest Number");
+            _LatestNumberPanel = new Panel(number.ToString()) { Width = 20 }.Header("Latest Number").BorderColor(Styles.BorderColorStyle);
         }
 
         // Function updates root grid with new panels (fake live updates)
@@ -96,7 +97,6 @@ namespace Calculator.Interface
                 case Enums.MenuChoice.View_Calculations:
                     MainGrid = SetGridTemplate();
                     MainGrid.AddRow(_CalculationListPanel);
-                    //MainGrid.AddRow(_CalculationsPanel);
                     break;
             }
         }

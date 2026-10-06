@@ -89,13 +89,12 @@ namespace Calculator.Libraries
             {
                 // If no first number has been input, assign it
                 _Result = userAnswer;
-                //_CurrentCalculation.Add(_Result.ToString());
+                
             }
             else
             {
                 // Assign every other number to this current number.
                 _LatestNumber = userAnswer;
-                //_CurrentCalculation.Add(_LatestNumber.ToString());
             }
         }
 
