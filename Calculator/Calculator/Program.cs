@@ -39,10 +39,13 @@ while (!endApp)
     switch (menuChoice)
     {
         case Enums.MenuChoice.Calculate:
-            calculating = true;
+            calculator.StartCalculating();
             break;
         case Enums.MenuChoice.View_Calculations:
             calculating = false;
+            calcInterface.UpdateDisplayPanel(calculator._Calculations);
+            calcInterface.UpdateMainGrid(Enums.MenuChoice.View_Calculations);
+            calcInterface.DisplayGrid();
             // Display calculations
             break;
         case Enums.MenuChoice.Close:
@@ -53,7 +56,7 @@ while (!endApp)
             break;
     }
 
-    while (calculating)
+    while (calculator._Calculating)
     {
         // Get the users input (singular number)
         try

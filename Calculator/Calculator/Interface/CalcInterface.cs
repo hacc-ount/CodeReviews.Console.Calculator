@@ -20,7 +20,7 @@ namespace Calculator.Interface
         //Grids
         internal Grid MainGrid { get; private set; } = new Grid();
         //Panels
-        private Panel _DisplayPanel { get; set; } = new Panel("----------") { Width = 30 }.Header("Display");
+        private Panel _CalculationListPanel { get; set; } = new Panel("----------") { Width = 30 }.Header("Past Calculations");
         private Panel _CalculationsPanel { get; set; } = new Panel("----------") { Width = 30 }.Header("Past Calculations");
         private Panel _LatestNumberPanel { get; set; } = new Panel("--") { Width = 30 }.Header("Latest Number");
 
@@ -41,23 +41,39 @@ namespace Calculator.Interface
         }
 
         // Function to create and update display panel
-        internal void UpdateDisplayPanel()
+        internal void UpdateDisplayPanel(List<List<string[]>> calculations)
         {
-            
+            StringBuilder sb = new StringBuilder();
+            foreach (var calculation in calculations)
+            {
+                int count = 0;
+                sb.Append($"{count}: ");
+                foreach (var part in calculation)
+                { 
+                    sb.Append($"{part[0]} ");
+                    sb.Append($" {part[1]} ");
+                    sb.Append($" {part[2]} ");
+                    sb.Append($"= {part[3]}");
+                    sb.Append(" -> "); // For seperating the next operation;*/
+                }
+                sb.Append($"\n");
+                count++;
+            }
+            _CalculationListPanel = new Panel(sb.ToString()) { Width = 30 }.Header("Calculations");
         }
 
         // Function to create and update calculations pannel
         internal void UpdateCalculationsPanel(List<string[]> ongoingCalculation)
         {
             StringBuilder sb = new StringBuilder();
-            
+
             foreach (string[] calculation in ongoingCalculation)
             {
                 sb.Append($"{calculation[0]} ");
                 sb.Append($" {calculation[1]} ");
-                sb.Append($" {calculation[2]}");
-                sb.Append($" = {calculation[3]}");
-                sb.Append(" -> "); // For seperating the next operation;
+                sb.Append($" {calculation[2]} ");
+                sb.Append($"= {calculation[3]}");
+                sb.Append(" -> "); // For seperating the next operation;*/
             }
             _CalculationsPanel = new Panel(sb.ToString()) { Width = 30 }.Header("Calculations");
         }
@@ -79,6 +95,7 @@ namespace Calculator.Interface
                     break;
                 case Enums.MenuChoice.View_Calculations:
                     MainGrid = SetGridTemplate();
+                    MainGrid.AddRow(_CalculationListPanel);
                     //MainGrid.AddRow(_CalculationsPanel);
                     break;
             }

@@ -23,6 +23,8 @@ namespace Calculator.Libraries
 
         internal List<List<string[]>> _Calculations { get; private set; } = new List<List<string[]>>();
 
+        internal bool _Calculating { get; private set; } = false;
+
         public CalculatorLibrary()
         {
             StreamWriter logFile = File.CreateText("calculatorlog.json");
@@ -44,6 +46,12 @@ namespace Calculator.Libraries
             else
             {
                 this._OperationChoice = menuChoice;
+                if (Enum.Equals(Enums.OperationChoice.Finish_Calculation, menuChoice))
+                {
+                    UpdateOverallCalculations(); // Update the overall calculations list
+                    _CurrentCalculation = new List<string[]>(); // Reset the current calculation
+                    EndCalculating();
+                }
             }
         }
 
@@ -160,8 +168,7 @@ namespace Calculator.Libraries
                     //writer.WriteValue("Divide");
                         break;
                     case Enums.OperationChoice.Finish_Calculation:
-                        UpdateOverallCalculations(); // Update the overall calculations list
-                        _CurrentCalculation = new List<string[]>(); // Reset the current calculation
+                        
                         break;
                 default:
                         break;
@@ -228,6 +235,17 @@ namespace Calculator.Libraries
             {
                 return false;
             }
+        }
+
+        internal void StartCalculating()
+        {
+            _Calculating = true;
+        }
+
+        internal void EndCalculating()
+        {
+            _Calculating = false;
+            _Result = double.NaN;
         }
 
         public void FinishJsonWriter()
