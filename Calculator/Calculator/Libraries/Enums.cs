@@ -6,7 +6,13 @@
         {
             Calculate,
             View_Calculations,
+            Delete_Calculations,
             Close
+        }
+
+        internal enum DeletionMenuChoices
+        {
+            
         }
 
         internal enum OperationChoice

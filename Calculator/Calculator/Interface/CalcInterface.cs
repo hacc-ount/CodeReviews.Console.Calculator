@@ -45,9 +45,9 @@ namespace Calculator.Interface
         internal void UpdateDisplayPanel(List<List<string[]>> calculations)
         {
             StringBuilder sb = new StringBuilder();
+            int count = 0;
             foreach (var calculation in calculations)
             {
-                int count = 0;
                 sb.Append($"{count}: ");
                 foreach (var part in calculation)
                 { 

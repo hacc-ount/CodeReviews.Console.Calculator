@@ -247,6 +247,11 @@ namespace Calculator.Libraries
             _Result = double.NaN;
         }
 
+        internal void DeleteCalculations()
+        {
+            _Calculations.Clear();
+        }
+
         public void FinishJsonWriter()
         {
             writer.WriteEndArray();

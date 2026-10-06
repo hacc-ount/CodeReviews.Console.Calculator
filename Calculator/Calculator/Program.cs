@@ -41,7 +41,12 @@ while (!endApp)
             calculator.StartCalculating();
             break;
         case Enums.MenuChoice.View_Calculations:
-            calculating = false;
+            calcInterface.UpdateDisplayPanel(calculator._Calculations);
+            calcInterface.UpdateMainGrid(Enums.MenuChoice.View_Calculations);
+            calcInterface.DisplayGrid();
+            break;
+        case Enums.MenuChoice.Delete_Calculations:
+            calculator.DeleteCalculations();
             calcInterface.UpdateDisplayPanel(calculator._Calculations);
             calcInterface.UpdateMainGrid(Enums.MenuChoice.View_Calculations);
             calcInterface.DisplayGrid();
