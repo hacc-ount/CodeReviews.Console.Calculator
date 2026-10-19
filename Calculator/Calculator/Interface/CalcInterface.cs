@@ -46,20 +46,33 @@ namespace Calculator.Interface
         {
             StringBuilder sb = new StringBuilder();
             int count = 0;
-            foreach (var calculation in calculations)
-            {
-                sb.Append($"{count}: ");
-                foreach (var part in calculation)
-                { 
-                    sb.Append($"{part[0]} ");
-                    sb.Append($" {part[1]} ");
-                    sb.Append($" {part[2]} ");
-                    sb.Append($"= {part[3]}");
-                    sb.Append(" -> "); // For seperating the next operation;*/
+                foreach (var calculation in calculations)
+                {
+                    int calculationCount = calculation.Count;
+                    int innerCalculationCount = 1;
+                    sb.Append($"{count}: ");
+                    foreach (var part in calculation)
+                    {
+                        sb.Append($"{part[0]} ");
+                        sb.Append($" {part[1]} ");
+                        sb.Append($" {part[2]} ");
+                        sb.Append($"= {part[3]}");
+                        if (innerCalculationCount == calculationCount)
+                        {
+
+                        }
+                        else
+                        {
+                        sb.Append(" --> "); // For seperating the next operation
+                        innerCalculationCount++;
+                        }
+                    }
+                    
+                    sb.Append($"\n");
+                    count++;
                 }
-                sb.Append($"\n");
-                count++;
-            }
+            
+            
             _CalculationListPanel = new Panel(sb.ToString()) { Width = 30 }.Header("Calculations").BorderColor(Styles.BorderColorStyle);
         }
 
