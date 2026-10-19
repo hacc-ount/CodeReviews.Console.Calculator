@@ -80,6 +80,7 @@ namespace Calculator.Libraries
         // Function fo singular input.
         internal void GetInput()
         {
+            writer.WriteStartObject();
             double userAnswer = AnsiConsole.Ask<double>($"[{Styles.TextColorStyle}]Enter a number:[/]");
             if (double.IsNaN(userAnswer))
             {
@@ -89,22 +90,30 @@ namespace Calculator.Libraries
             {
                 // If no first number has been input, assign it
                 _Result = userAnswer;
-                
+                writer.WritePropertyName("Operand");
+                writer.WriteValue(_Result);
+
             }
             else
             {
                 // Assign every other number to this current number.
                 _LatestNumber = userAnswer;
+                writer.WritePropertyName("Operand");
+                writer.WriteValue(_LatestNumber);
             }
+            writer.WriteEndObject();
         }
 
         // Function to do the operation
         internal void DoOperation()
         {
+            writer.WriteStartObject();
             double temp = 0;
                 switch (_OperationChoice)
                 {
                     case Enums.OperationChoice.Add:
+                        writer.WritePropertyName("Operation");
+                        writer.WriteValue("Add");
                         if (double.IsNaN(_Result))
                         {
                             throw new NotFiniteNumberException("NotFiniteNumberException: Number is NaN");
@@ -114,10 +123,14 @@ namespace Calculator.Libraries
                             temp = _Result;
                             _Result = _Result + _LatestNumber;
                             UpdateCurrentCalculation(temp, _LatestNumber, "+", _Result);
+                            writer.WritePropertyName("Result");
+                            writer.WriteValue(_Result);
+                            writer.WriteEndObject();
                         }
-                        //writer.WriteValue("Add");
                         break;
                     case Enums.OperationChoice.Subtract:
+                        writer.WritePropertyName("Operation");
+                        writer.WriteValue("Subtract");
                         if (double.IsNaN(_Result))
                         {
                             throw new NotFiniteNumberException("NotFiniteNumberException: Number is NaN");
@@ -127,10 +140,14 @@ namespace Calculator.Libraries
                             temp = _Result;
                             _Result = _Result - _LatestNumber;
                             UpdateCurrentCalculation(temp, _LatestNumber, "-", _Result);
+                            writer.WritePropertyName("Result");
+                            writer.WriteValue(_Result);
+                            writer.WriteEndObject();
                         }
-                        //writer.WriteValue("Subtract");
                         break;
                     case Enums.OperationChoice.Multiply:
+                        writer.WritePropertyName("Operation");
+                        writer.WriteValue("Multiply");
                         if (double.IsNaN(_Result))
                         {
                             throw new NotFiniteNumberException("NotFiniteNumberException: Number is NaN");
@@ -140,54 +157,48 @@ namespace Calculator.Libraries
                             temp = _Result;
                             _Result = _Result * _LatestNumber;
                             UpdateCurrentCalculation(temp, _LatestNumber, "*", _Result);
+                            writer.WritePropertyName("Result");
+                            writer.WriteValue(_Result);
+                            writer.WriteEndObject();
                         }
-                        //writer.WriteValue("Multiply");
+                        
                         break;
                     case Enums.OperationChoice.Divide:
+                        writer.WritePropertyName("Operation");
+                        writer.WriteValue("Divide");
                         if (double.IsNaN(_Result))
-                        {
-                            throw new NotFiniteNumberException("NotFiniteNumberException: Number is NaN");
-                        }
-                        else
-                        {
-                            if (_LatestNumber != 0)
                             {
-                                temp = _Result;
-                                _Result = _Result / _LatestNumber;
-                                UpdateCurrentCalculation(temp, _LatestNumber, "/", _Result);
+                                throw new NotFiniteNumberException("NotFiniteNumberException: Number is NaN");
                             }
                             else
                             {
-                                GetValidDivisionNumber();
-                                temp = _Result;
-                                _Result = _Result / _LatestNumber;
-                                UpdateCurrentCalculation(temp, _LatestNumber, "/", _Result);
+                                if (_LatestNumber != 0)
+                                {
+                                    temp = _Result;
+                                    _Result = _Result / _LatestNumber;
+                                    UpdateCurrentCalculation(temp, _LatestNumber, "/", _Result);
+                                    writer.WritePropertyName("Result");
+                                    writer.WriteValue(_Result);
+                                    writer.WriteEndObject();
+                                }
+                                else
+                                {
+                                    GetValidDivisionNumber();
+                                    temp = _Result;
+                                    _Result = _Result / _LatestNumber;
+                                    UpdateCurrentCalculation(temp, _LatestNumber, "/", _Result);
+                                    writer.WritePropertyName("Result");
+                                    writer.WriteValue(_Result);
+                                    writer.WriteEndObject();
+                                }
                             }
-                        }
-                    //writer.WriteValue("Divide");
                         break;
                     case Enums.OperationChoice.Finish_Calculation:
-                        
                         break;
                 default:
                         break;
                 }
             }
-
-            /*writer.WriteStartObject();
-            writer.WritePropertyName("Operand1");
-            writer.WriteValue(_UserFirstInput);
-            writer.WritePropertyName("Operand2");
-            writer.WriteValue(_UserSecondInput);
-            writer.WritePropertyName("Operation");*/
-
-           /* 
-            writer.WritePropertyName("Result");
-            writer.WriteValue(_Result);
-            writer.WriteEndObject();
-            _Result = result;
-            // Update use counter here? maybe not...*/
-        
 
         // Function only used during division operation when trying to divide by zero
         private void GetValidDivisionNumber()
