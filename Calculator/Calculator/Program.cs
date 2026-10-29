@@ -1,11 +1,11 @@
 ﻿// Program.cs
 
 // Project function library
-using Calculator.Libraries;
 // Project interface library
 using Calculator.Interface;
-
-using System.Text.RegularExpressions;
+using Calculator.Libraries;
+using Newtonsoft.Json;
+// Spectre Console
 using Spectre.Console;
 
 // Set initial variables
@@ -39,6 +39,9 @@ while (!endApp)
     {
         case Enums.MenuChoice.Calculate:
             calculator.StartCalculating();
+            calculator.writer.WriteStartObject();
+            calculator.writer.WritePropertyName($"Calculation_{calculator.CalculationCount}");
+            calculator.writer.WriteStartArray();
             break;
         case Enums.MenuChoice.View_Calculations:
             calcInterface.UpdateDisplayPanel(calculator._Calculations);
@@ -54,12 +57,14 @@ while (!endApp)
             break;
         case Enums.MenuChoice.Close:
             endApp = true;
+            calculator.FinishJsonWriter();
             break;
         default:
             endApp = true;
+            calculator.FinishJsonWriter();
             break;
     }
-
+    
     while (calculator._Calculating)
     {
         // Get the users input (singular number)
@@ -127,8 +132,11 @@ while (!endApp)
             Messages.Print(ex.Message, Styles.ErrorStyle);
             Messages.ErrorPressAnyKey();
         }
-
+    }
+    if (menuChoice == Enums.MenuChoice.Calculate)
+    {
+        calculator.writer.WriteEndArray();
+        calculator.writer.WriteEndObject();
     }
 }
-calculator.FinishJsonWriter();
 return;

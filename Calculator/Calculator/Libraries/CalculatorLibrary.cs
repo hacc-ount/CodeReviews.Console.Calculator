@@ -10,10 +10,10 @@ namespace Calculator.Libraries
 {
     internal class CalculatorLibrary
     {
-        JsonWriter writer;
+        internal JsonWriter writer;
         internal Enum _OperationChoice { get; private set; } = Enums.Default.Default;
 
-        private bool _OperationStart { get; set; } = false;
+        //private bool _OperationStart { get; set; } = false;
         
         internal double _LatestNumber { get; private set; } = double.NaN;
 
@@ -24,6 +24,8 @@ namespace Calculator.Libraries
         internal List<List<string[]>> _Calculations { get; private set; } = new List<List<string[]>>();
 
         internal bool _Calculating { get; private set; } = false;
+
+        internal int CalculationCount { get; private set; } = 1;
 
         public CalculatorLibrary()
         {
@@ -50,6 +52,7 @@ namespace Calculator.Libraries
                 {
                     UpdateOverallCalculations(); // Update the overall calculations list
                     _CurrentCalculation = new List<string[]>(); // Reset the current calculation
+                    CalculationCount += 1;
                     EndCalculating();
                 }
             }
@@ -77,7 +80,7 @@ namespace Calculator.Libraries
             }
         }
 
-        // Function fo singular input.
+        // Function for singular input.
         internal void GetInput()
         {
             writer.WriteStartObject();
@@ -92,7 +95,6 @@ namespace Calculator.Libraries
                 _Result = userAnswer;
                 writer.WritePropertyName("Operand");
                 writer.WriteValue(_Result);
-
             }
             else
             {
@@ -194,6 +196,8 @@ namespace Calculator.Libraries
                             }
                         break;
                     case Enums.OperationChoice.Finish_Calculation:
+                        //FinishJsonWriterCalculation();
+                        EndCalculating();
                         break;
                 default:
                         break;
@@ -256,6 +260,7 @@ namespace Calculator.Libraries
         {
             _Calculating = false;
             _Result = double.NaN;
+            _LatestNumber = double.NaN;
         }
 
         internal void DeleteCalculations()
@@ -263,8 +268,16 @@ namespace Calculator.Libraries
             _Calculations.Clear();
         }
 
+        public void FinishJsonWriterCalculation()
+        {
+            //Finish current array
+            writer.WriteEndArray();
+            writer.WriteEndObject();
+        }
+
         public void FinishJsonWriter()
         {
+            // Finish parent object
             writer.WriteEndArray();
             writer.WriteEndObject();
             writer.Close();
