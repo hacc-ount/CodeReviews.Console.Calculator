@@ -12,13 +12,8 @@ namespace Calculator.Libraries
     {
         internal JsonWriter writer;
         internal Enum _OperationChoice { get; private set; } = Enums.Default.Default;
-
-        //private bool _OperationStart { get; set; } = false;
-        
         internal double _LatestNumber { get; private set; } = double.NaN;
-
         internal double _Result { get; private set; } = double.NaN;
-        private string _CurrentOperationSymbol { get; set; } = "@";
         internal List<string[]> _CurrentCalculation { get; private set; } = new List<string[]>();
 
         internal List<List<string[]>> _Calculations { get; private set; } = new List<List<string[]>>();
@@ -34,7 +29,7 @@ namespace Calculator.Libraries
             writer = new JsonTextWriter(logFile);
             writer.Formatting = Formatting.Indented;
             writer.WriteStartObject();
-            writer.WritePropertyName("Operations");
+            writer.WritePropertyName("Calculator Program");
             writer.WriteStartArray();
         }
 
@@ -58,28 +53,6 @@ namespace Calculator.Libraries
             }
         }
 
-        internal void UpdateMethodSymbol()
-        {
-            switch (_OperationChoice)
-            {
-                case Enums.OperationChoice.Add:
-                    _CurrentOperationSymbol = "+";
-                    break;
-                case Enums.OperationChoice.Subtract:
-                    _CurrentOperationSymbol = "-";
-                    break;
-                case Enums.OperationChoice.Multiply:
-                    _CurrentOperationSymbol = "*";
-                    break;
-                case Enums.OperationChoice.Divide:
-                    _CurrentOperationSymbol = "/";
-                    break;
-                case Enums.Default.Default:
-                    _CurrentOperationSymbol = "@";
-                    throw new InvalidOperationException("InvalidOperationException: Not a valid menuChoice symbol");
-            }
-        }
-
         // Function for singular input.
         internal void GetInput()
         {
@@ -93,14 +66,14 @@ namespace Calculator.Libraries
             {
                 // If no first number has been input, assign it
                 _Result = userAnswer;
-                writer.WritePropertyName("Operand");
+                writer.WritePropertyName("Initial Number");
                 writer.WriteValue(_Result);
             }
             else
             {
                 // Assign every other number to this current number.
                 _LatestNumber = userAnswer;
-                writer.WritePropertyName("Operand");
+                writer.WritePropertyName("Latest Number");
                 writer.WriteValue(_LatestNumber);
             }
             writer.WriteEndObject();

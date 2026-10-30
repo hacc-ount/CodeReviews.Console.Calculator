@@ -120,18 +120,6 @@ while (!endApp)
             Messages.Print(ex.Message, Styles.ErrorStyle);
             Messages.ErrorPressAnyKey();
         }
-
-        // Try update calculation symbol
-        try
-        {
-            calculator.UpdateMethodSymbol();
-        }
-        catch (Exception ex)
-        {
-            endApp = true;
-            Messages.Print(ex.Message, Styles.ErrorStyle);
-            Messages.ErrorPressAnyKey();
-        }
     }
     if (menuChoice == Enums.MenuChoice.Calculate)
     {
